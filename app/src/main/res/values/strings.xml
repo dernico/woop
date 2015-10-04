@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Woop</string>
+    <string name="title_activity_login">Login</string>
+    <string name="menu_action_settings">Settings</string>
+
+    <string name="login_login_text">Please login with your google Account</string>
+    <string name="title_activity_main">Woop</string>
+
+</resources>
