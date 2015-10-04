@@ -27,6 +27,7 @@ public class BaseActivity extends AppCompatActivity
     protected static ILogger _logger = new Logger();
     protected Menu _menu;
     protected GoogleData _google;
+    private static Drawable _icon;
 
 
     @Override
@@ -86,17 +87,26 @@ public class BaseActivity extends AppCompatActivity
             _logger.error(TAG,"Menu object was null wen trying to set Menu Icon");
         }
 
-        new ImageDownloader(new ImageDownloader.ImageDownloadedListener() {
-            @Override
-            public void downloaded(Bitmap bitmap) {
 
-                MenuItem item = _menu.findItem(R.id.action_user_icon);
-                if(item != null){
-                    Drawable icon = new BitmapDrawable(getResources(),bitmap);
-                    item.setIcon(icon);
+
+        if(_icon == null){
+
+            new ImageDownloader(new ImageDownloader.ImageDownloadedListener() {
+                @Override
+                public void downloaded(Bitmap bitmap) {
+
+                    MenuItem item = _menu.findItem(R.id.action_user_icon);
+                    if(item != null){
+                        _icon = new BitmapDrawable(getResources(),bitmap);
+                        item.setIcon(_icon);
+                    }
                 }
-            }
-        }).execute(person.getImageUrl());
+            }).execute(person.getImageUrl());
+        }else{
+
+            MenuItem item = _menu.findItem(R.id.action_user_icon);
+            item.setIcon(_icon);
+        }
     }
 
 

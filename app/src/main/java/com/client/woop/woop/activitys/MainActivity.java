@@ -1,6 +1,9 @@
 package com.client.woop.woop.activitys;
 
+import android.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -8,18 +11,24 @@ import android.widget.TextView;
 import com.client.woop.woop.R;
 import com.client.woop.woop.controller.MainController;
 import com.client.woop.woop.data.IGoogleData;
+import com.client.woop.woop.fragments.NavigationFragment;
 import com.client.woop.woop.models.Person;
 
-public class MainActivity extends BaseActivity implements IMainView{
+public class MainActivity extends BaseActivity implements IMainView, NavigationFragment.OnFragmentInteractionListener{
 
-    private TextView _tvUserName;
+    private NavigationFragment _navigationFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _tvUserName = (TextView)findViewById(R.id.main_user_name);
+        _navigationFragment = (NavigationFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.navigation_fragment);
+
+        _navigationFragment.setUp(
+                R.id.navigation_fragment,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
 
         new MainController(this);
     }
@@ -57,6 +66,14 @@ public class MainActivity extends BaseActivity implements IMainView{
 
     @Override
     public void setPersonInfo(Person person) {
-        _tvUserName.setText("Hello " + person.getDisplayName());
+    }
+
+    @Override
+    public void onNavigationItemSelected(android.support.v4.app.Fragment fragment) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 }

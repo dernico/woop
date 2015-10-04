@@ -6,4 +6,14 @@
     <string name="login_login_text">Please login with your google Account</string>
     <string name="title_activity_main">Woop</string>
 
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="navigation_open">Navigation Open</string>
+    <string name="navigation_close">Navigation Close</string>
+
+    <string name="navigation_liste">Liste</string>
+    <string name="navigation_streams">Streams</string>
+    <string name="navigation_youtube">You Tube</string>
+
 </resources>
