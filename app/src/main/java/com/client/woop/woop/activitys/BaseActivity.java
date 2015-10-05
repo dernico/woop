@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +14,7 @@ import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
 import com.client.woop.woop.R;
 import com.client.woop.woop.data.GoogleData;
+import com.client.woop.woop.fragments.NavigationFragment;
 import com.client.woop.woop.models.Person;
 import com.client.woop.woop.navigation.INavigation;
 import com.client.woop.woop.navigation.Navigation;
@@ -19,11 +22,14 @@ import com.client.woop.woop.web.ImageDownloader;
 
 
 public class BaseActivity extends AppCompatActivity
-        implements GoogleData.GoogleConnectedListener
+        implements GoogleData.GoogleConnectedListener,
+        NavigationFragment.OnFragmentInteractionListener
 {
     private String TAG;
 
     protected INavigation _navigator;
+    private NavigationFragment _navigationFragment;
+
     protected static ILogger _logger = new Logger();
     protected Menu _menu;
     protected GoogleData _google;
@@ -41,6 +47,14 @@ public class BaseActivity extends AppCompatActivity
         _navigator = new Navigation(this);
 
         _google = new GoogleData(this, this);
+
+
+        _navigationFragment = (NavigationFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.navigation_fragment);
+
+        _navigationFragment.setUp(
+                R.id.navigation_fragment,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
 
     }
 
@@ -113,5 +127,15 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public void onConnected(Bundle bundle) {
         _logger.info(TAG, "onConnected was not implemented by the child.");
+    }
+
+
+    @Override
+    public void onNavigationItemSelected(android.support.v4.app.Fragment fragment) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
     }
 }
