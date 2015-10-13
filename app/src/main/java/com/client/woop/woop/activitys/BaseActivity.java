@@ -48,6 +48,9 @@ public class BaseActivity extends AppCompatActivity
 
         _google = new GoogleData(this, this);
 
+    }
+
+    public void setNavigation(){
 
         _navigationFragment = (NavigationFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_fragment);
@@ -55,7 +58,6 @@ public class BaseActivity extends AppCompatActivity
         _navigationFragment.setUp(
                 R.id.navigation_fragment,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
     }
 
 

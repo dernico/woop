@@ -1,5 +1,6 @@
 package com.client.woop.woop.activitys;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,11 +12,18 @@ import com.client.woop.woop.models.Person;
 
 public class MainActivity extends BaseActivity implements IMainView{
 
+
+    private ProgressDialog _progressDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        _progressDialog = new ProgressDialog(this);
+
+        setNavigation();
 
         new MainController(this);
     }
@@ -53,5 +61,17 @@ public class MainActivity extends BaseActivity implements IMainView{
 
     @Override
     public void setPersonInfo(Person person) {
+    }
+
+    @Override
+    public void showProgressBar() {
+        _progressDialog.setTitle("Searching Woop Server");
+        _progressDialog.setMessage("Wait while searching...");
+        _progressDialog.show();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        _progressDialog.dismiss();
     }
 }

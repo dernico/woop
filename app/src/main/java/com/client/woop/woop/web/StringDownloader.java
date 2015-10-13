@@ -14,15 +14,17 @@ import java.net.URL;
 public class StringDownloader extends AsyncTask<Void, Void, String> {
 
     public interface DownloadCompleteListener {
-        void completionCallBack(String html);
+        void completionCallBack(String uri, String result);
     }
 
-    public DownloadCompleteListener listener;
-    public String link;
+    private DownloadCompleteListener listener;
+    private String _link;
+    private int _timeout;
 
-    public StringDownloader (String aLink, DownloadCompleteListener aListener) {
+    public StringDownloader (String aLink, int timeout, DownloadCompleteListener aListener) {
         listener = aListener;
-        link = aLink;
+        _link = aLink;
+        _timeout = timeout;
     }
 
     @Override
@@ -30,10 +32,10 @@ public class StringDownloader extends AsyncTask<Void, Void, String> {
         InputStream is = null;
 
         try {
-            URL url = new URL(link);
+            URL url = new URL(_link);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setReadTimeout(_timeout /* milliseconds */);
+            conn.setConnectTimeout(_timeout /* milliseconds */);
             conn.setRequestMethod("GET");
             conn.setDoInput(true);
             // Starts the query
@@ -81,8 +83,8 @@ public class StringDownloader extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        if (!isCancelled()) {
-            listener.completionCallBack(result);
+        if (!isCancelled() && result != null) {
+            listener.completionCallBack(_link, result);
         }
     }
 }

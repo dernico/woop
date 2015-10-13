@@ -22,7 +22,14 @@ public class MainController {
     }
 
     public void findWoopServer(){
-        WoopServer.singelton().findService();
+        _view.showProgressBar();
+        WoopServer.singelton().findService(new WoopServer.WoopServerListener() {
+            @Override
+            public void serviceFound() {
+                _view.hideProgressBar();
+                loadStreamList();
+            }
+        });
     }
 
     private void loadStreamList(){

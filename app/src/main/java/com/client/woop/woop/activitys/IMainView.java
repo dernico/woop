@@ -10,5 +10,7 @@ public interface IMainView {
 
     IGoogleData getGoogleData();
     void setPersonInfo(Person person);
+    void showProgressBar();
+    void hideProgressBar();
 
 }
