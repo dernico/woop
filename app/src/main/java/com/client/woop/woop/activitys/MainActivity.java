@@ -1,19 +1,19 @@
 package com.client.woop.woop.activitys;
 
-import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;;
+import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.client.woop.woop.R;
 import com.client.woop.woop.controller.MainController;
-import com.client.woop.woop.data.IGoogleData;
-import com.client.woop.woop.models.Person;
+import com.client.woop.woop.data.ClientDataStorage;
+import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.fragments.NavigationFragment;
 
 public class MainActivity extends BaseActivity implements IMainView{
-
-
-    private ProgressDialog _progressDialog;
 
 
     @Override
@@ -21,11 +21,18 @@ public class MainActivity extends BaseActivity implements IMainView{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _progressDialog = new ProgressDialog(this);
+        setNavigationFragment();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        new MainController(this, WoopServer.singelton(new ClientDataStorage(prefs)), navigation());
+    }
 
-        setNavigation();
+    private void setNavigationFragment() {
+        NavigationFragment navigationFragment = (NavigationFragment) getFragmentManager()
+                .findFragmentById(R.id.navigation_fragment);
 
-        new MainController(this);
+        navigationFragment.setUp(
+                R.id.navigation_fragment,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
     @Override
@@ -54,24 +61,4 @@ public class MainActivity extends BaseActivity implements IMainView{
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public IGoogleData getGoogleData() {
-        return _google;
-    }
-
-    @Override
-    public void setPersonInfo(Person person) {
-    }
-
-    @Override
-    public void showProgressBar() {
-        _progressDialog.setTitle("Searching Woop Server");
-        _progressDialog.setMessage("Wait while searching...");
-        _progressDialog.show();
-    }
-
-    @Override
-    public void hideProgressBar() {
-        _progressDialog.dismiss();
-    }
 }

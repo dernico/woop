@@ -1,13 +1,15 @@
 package com.client.woop.woop.fragments;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -22,30 +24,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.client.woop.woop.R;
+import com.client.woop.woop.activitys.BaseActivity;
+import com.client.woop.woop.navigation.INavigation;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NavigationFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NavigationFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class NavigationFragment extends Fragment {
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        void onNavigationItemSelected(Fragment fragment);
-    }
+public class NavigationFragment extends BaseFragment {
 
     /**
      * Remember the position of the selected item.
@@ -58,8 +43,6 @@ public class NavigationFragment extends Fragment {
      */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
 
-
-
     private int _currentSelectedPosition = 0;
     private boolean _fromSavedInstanceState;
     private boolean _userLearnedDrawer;
@@ -71,24 +54,6 @@ public class NavigationFragment extends Fragment {
     private View _fragmentContainerView;
 
 
-    private OnFragmentInteractionListener _listener;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment NavigationFragment.
-     */
-    public static NavigationFragment newInstance(String param1, String param2) {
-        NavigationFragment fragment = new NavigationFragment();
-        Bundle args = new Bundle();
-        /*args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        */
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     public NavigationFragment() {
         // Required empty public constructor
     }
@@ -96,10 +61,7 @@ public class NavigationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }*/
+
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -111,12 +73,15 @@ public class NavigationFragment extends Fragment {
         }
 
         selectItem(_currentSelectedPosition);
+
+        //setUp();
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         _drawerListView = (ListView) inflater.inflate(R.layout.fragment_navigation, container, false);
 
         _drawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -134,6 +99,7 @@ public class NavigationFragment extends Fragment {
                         getString(R.string.navigation_liste),
                         getString(R.string.navigation_streams),
                         getString(R.string.navigation_youtube),
+                        getString(R.string.navigation_settings)
                 }));
         _drawerListView.setItemChecked(_currentSelectedPosition, true);
         return _drawerListView;
@@ -152,24 +118,6 @@ public class NavigationFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, _currentSelectedPosition);
     }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            _listener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        _listener = null;
-    }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -191,16 +139,11 @@ public class NavigationFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    public void setUp(int navigation_fragment, DrawerLayout drawerLayout) {
 
-    /**
-     * Users of this fragment must call this method to set up the navigation drawer interactions.
-     *
-     * @param fragmentId   The android:id of this fragment in its activity's layout.
-     * @param drawerLayout The DrawerLayout containing this fragment's UI.
-     */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
-        _fragmentContainerView = getActivity().findViewById(fragmentId);
+        _fragmentContainerView = getActivity().findViewById(navigation_fragment);
         _drawerLayout = drawerLayout;
+
 
         // set a custom shadow that overlays the main content when the drawer opens
         _drawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -226,7 +169,8 @@ public class NavigationFragment extends Fragment {
                     return;
                 }
 
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                getActivity().invalidateOptionsMenu();
+                //getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
             @Override
@@ -245,7 +189,8 @@ public class NavigationFragment extends Fragment {
                     sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
                 }
 
-                getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                getActivity().invalidateOptionsMenu();
+                //getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
 
@@ -278,23 +223,23 @@ public class NavigationFragment extends Fragment {
         if (_drawerLayout != null) {
             _drawerLayout.closeDrawer(_fragmentContainerView);
         }
-        if (_listener != null) {
-            Fragment fragment = null;
-            switch (position){
-                case 0:
-                    fragment = ListeFragment.newInstance("","");
-                    break;
-                case 1:
-                    fragment = StreamsFragment.newInstance("","");
-                    break;
-                case 2:
-                    fragment = YouTubeFragment.newInstance("","");
-                    break;
-                default:
-                    fragment = StreamsFragment.newInstance("","");
-            }
-            _listener.onNavigationItemSelected(fragment);
+        switch (position){
+            case 0:
+                _navigation.navigateFragmentList();
+                break;
+            case 1:
+                _navigation.navigateFragmentStreams();
+                break;
+            case 2:
+                _navigation.navigateFragmentYouTube();
+                break;
+            case 3:
+                _navigation.navigateFragmentSettings();
+                break;
+            default:
+                _navigation.navigateFragmentList();
         }
+
     }
 
     public boolean isDrawerOpen() {

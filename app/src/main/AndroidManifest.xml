@@ -13,8 +13,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".activitys.LoginActivity"
-            android:noHistory="true"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login"
+            android:noHistory="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,39 +1,28 @@
 package com.client.woop.woop.controller;
 
 import com.client.woop.woop.activitys.IMainView;
-import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.data.IWoopServer;
+import com.client.woop.woop.navigation.INavigation;
 
 
-/**
- * Created by nico on 9/30/2015.
- */
 public class MainController {
 
     private IMainView _view;
+    private INavigation _navigaiton;
+    private IWoopServer _woop;
 
-    public MainController(IMainView view){
+    public MainController(IMainView view, IWoopServer woop, INavigation navigation){
         _view = view;
-        setPersonInfo();
-        findWoopServer();
+        _navigaiton = navigation;
+        _woop = woop;
+        VerifyWoopServiceIsAvailable();
     }
 
-    private void setPersonInfo(){
-        _view.setPersonInfo(_view.getGoogleData().getPerson());
-    }
-
-    public void findWoopServer(){
-        _view.showProgressBar();
-        WoopServer.singelton().findService(new WoopServer.WoopServerListener() {
-            @Override
-            public void serviceFound() {
-                _view.hideProgressBar();
-                loadStreamList();
-            }
-        });
-    }
-
-    private void loadStreamList(){
-
+    private void VerifyWoopServiceIsAvailable(){
+        boolean isSet = _woop.isServiceAdressSet();
+        if (!isSet){
+            _navigaiton.navigateFragmentSettings();
+        }
     }
 
 }

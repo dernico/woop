@@ -22,13 +22,12 @@ import com.client.woop.woop.web.ImageDownloader;
 
 
 public class BaseActivity extends AppCompatActivity
-        implements GoogleData.GoogleConnectedListener,
-        NavigationFragment.OnFragmentInteractionListener
+        implements GoogleData.GoogleConnectedListener
 {
     private String TAG;
 
-    protected INavigation _navigator;
-    private NavigationFragment _navigationFragment;
+    private INavigation _navigator;
+    //private NavigationFragment _navigationFragment;
 
     protected static ILogger _logger = new Logger();
     protected Menu _menu;
@@ -50,7 +49,7 @@ public class BaseActivity extends AppCompatActivity
 
     }
 
-    public void setNavigation(){
+   /* public void setNavigationFragment(){
 
         _navigationFragment = (NavigationFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_fragment);
@@ -58,8 +57,11 @@ public class BaseActivity extends AppCompatActivity
         _navigationFragment.setUp(
                 R.id.navigation_fragment,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-    }
+    }*/
 
+    public INavigation navigation(){
+        return _navigator;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -131,13 +133,4 @@ public class BaseActivity extends AppCompatActivity
         _logger.info(TAG, "onConnected was not implemented by the child.");
     }
 
-
-    @Override
-    public void onNavigationItemSelected(android.support.v4.app.Fragment fragment) {
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
 }
