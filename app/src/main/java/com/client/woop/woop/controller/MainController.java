@@ -1,7 +1,7 @@
 package com.client.woop.woop.controller;
 
 import com.client.woop.woop.activitys.IMainView;
-import com.client.woop.woop.data.IWoopServer;
+import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.navigation.INavigation;
 
 

@@ -1,4 +1,4 @@
-package com.client.woop.woop.data;
+package com.client.woop.woop.data.interfaces;
 
 /**
  * Created by nico on 10/13/2015.

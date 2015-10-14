@@ -10,7 +10,9 @@ import android.view.MenuItem;
 import com.client.woop.woop.R;
 import com.client.woop.woop.controller.MainController;
 import com.client.woop.woop.data.ClientDataStorage;
+import com.client.woop.woop.data.DeviceData;
 import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.fragments.NavigationFragment;
 
 public class MainActivity extends BaseActivity implements IMainView{
@@ -23,7 +25,8 @@ public class MainActivity extends BaseActivity implements IMainView{
 
         setNavigationFragment();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        new MainController(this, WoopServer.singelton(new ClientDataStorage(prefs)), navigation());
+        IWoopServer woop = WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
+        new MainController(this, woop, navigation());
     }
 
     private void setNavigationFragment() {

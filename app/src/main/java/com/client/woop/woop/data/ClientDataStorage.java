@@ -1,7 +1,8 @@
 package com.client.woop.woop.data;
 
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+
+import com.client.woop.woop.data.interfaces.IClientDataStorage;
 
 
 public class ClientDataStorage implements IClientDataStorage {
