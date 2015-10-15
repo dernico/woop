@@ -1,12 +1,15 @@
 package com.client.woop.woop.data.interfaces;
 
 import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.models.StreamModel;
 
-/**
- * Created by nico on 10/13/2015.
- */
+import java.util.List;
+
+
 public interface IWoopServer {
     boolean isServiceAdressSet();
     void findService(WoopServer.WoopServerListener listener);
     void resetService();
+
+    void getSavedStreams(WoopServer.WoopDataReceived<List<StreamModel>> result);
 }

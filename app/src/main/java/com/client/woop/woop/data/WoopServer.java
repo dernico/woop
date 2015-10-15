@@ -1,11 +1,19 @@
 package com.client.woop.woop.data;
 
+import android.net.Uri;
+
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
 import com.client.woop.woop.data.interfaces.IClientDataStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
+import com.client.woop.woop.models.StreamModel;
+import com.client.woop.woop.web.JSONDownloader;
 import com.client.woop.woop.web.StringDownloader;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +33,10 @@ public class WoopServer implements IWoopServer {
 
     public interface WoopServerListener{
         void serviceFound();
+    }
+
+    public interface WoopDataReceived<T>{
+        void dataReceived(T result);
     }
 
 
@@ -50,11 +62,8 @@ public class WoopServer implements IWoopServer {
         return true;
     }
 
-
+    @Override
     public void findService(final WoopServerListener listener){
-
-
-
 
         String subnet = _deviceData.getIPAddress();
         subnet = "http://" + subnet.substring(0, subnet.lastIndexOf('.')+1);
@@ -83,6 +92,26 @@ public class WoopServer implements IWoopServer {
     @Override
     public void resetService() {
         _storage.removeKey(SERVICE_HOST_ADDRESS);
+    }
+
+    @Override
+    public void getSavedStreams(final WoopDataReceived<List<StreamModel>> result) {
+
+        new JSONDownloader(_serviceHostAdress + "/api/music/streams", new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(JSONObject json) {
+                List<StreamModel> streams = new ArrayList<StreamModel>();
+                try {
+                    JSONArray aStreams = json.getJSONArray("streams");
+                    for(int i = 0; i < aStreams.length(); i++){
+                        streams.add(StreamModel.createFromJson(aStreams.getJSONObject(i)));
+                    }
+                } catch (JSONException e) {
+                    _logger.info(TAG, e.toString());
+                }
+                result.dataReceived(streams);
+            }
+        }).execute();
     }
 
 }

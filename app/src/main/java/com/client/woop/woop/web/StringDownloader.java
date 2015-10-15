@@ -1,6 +1,7 @@
 package com.client.woop.woop.web;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,12 +18,12 @@ public class StringDownloader extends AsyncTask<Void, Void, String> {
         void completionCallBack(String uri, String result);
     }
 
-    private DownloadCompleteListener listener;
+    private DownloadCompleteListener _listener;
     private String _link;
     private int _timeout;
 
     public StringDownloader (String aLink, int timeout, DownloadCompleteListener aListener) {
-        listener = aListener;
+        _listener = aListener;
         _link = aLink;
         _timeout = timeout;
     }
@@ -41,7 +42,7 @@ public class StringDownloader extends AsyncTask<Void, Void, String> {
             // Starts the query
             conn.connect();
             int response = conn.getResponseCode();
-            //Log.d(DEBUG_TAG, "The response is: " + response);
+            Log.d("StringDownloader", "The response code is: " + response);
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
@@ -68,11 +69,11 @@ public class StringDownloader extends AsyncTask<Void, Void, String> {
         return null;
     }
 
-    public String readIt(InputStream stream) throws IOException {
+    private String readIt(InputStream stream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
 
         String str;
-        String result = null;
+        String result = "";
 
         while( (str = reader.readLine()) != null){
             result += str;
@@ -84,7 +85,7 @@ public class StringDownloader extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         if (!isCancelled() && result != null) {
-            listener.completionCallBack(_link, result);
+            _listener.completionCallBack(_link, result);
         }
     }
 }
