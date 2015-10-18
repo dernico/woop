@@ -1,27 +1,52 @@
-<android.support.v4.widget.DrawerLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.client.woop.woop.activitys.MainActivity">
+    android:layout_width="match_parent">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </FrameLayout>
-
-
-    <fragment
-        android:id="@+id/navigation_fragment"
+    <android.support.v4.widget.DrawerLayout
+        tools:context="com.client.woop.woop.activitys.MainActivity"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:name="com.client.woop.woop.fragments.NavigationFragment"
-        tools:layout="@layout/fragment_navigation"
-        ></fragment>
+        android:layout_above="@+id/activity_main_player_control">
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </FrameLayout>
 
 
-</android.support.v4.widget.DrawerLayout>
+        <fragment
+            android:id="@+id/navigation_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:name="com.client.woop.woop.fragments.NavigationFragment"
+            tools:layout="@layout/fragment_navigation"
+            ></fragment>
+
+
+    </android.support.v4.widget.DrawerLayout>
+
+
+
+    <LinearLayout android:id="@+id/activity_main_player_control"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        style="@android:style/ButtonBar">
+
+        <Button android:id="@+id/saveButton" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Play" />
+
+        <Button android:id="@+id/cancelButton" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_weight="1"
+            android:text="Stop" />
+    </LinearLayout>
+
+</RelativeLayout>
+

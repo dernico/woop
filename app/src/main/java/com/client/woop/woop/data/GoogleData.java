@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
+import com.client.woop.woop.data.interfaces.IGoogleData;
 import com.client.woop.woop.models.Person;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;

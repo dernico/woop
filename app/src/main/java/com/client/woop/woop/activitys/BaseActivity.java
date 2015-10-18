@@ -1,9 +1,11 @@
 package com.client.woop.woop.activitys;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +15,11 @@ import android.view.MenuItem;
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
 import com.client.woop.woop.R;
+import com.client.woop.woop.data.ClientDataStorage;
+import com.client.woop.woop.data.DeviceData;
 import com.client.woop.woop.data.GoogleData;
+import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.fragments.NavigationFragment;
 import com.client.woop.woop.models.Person;
 import com.client.woop.woop.navigation.INavigation;
@@ -27,7 +33,7 @@ public class BaseActivity extends AppCompatActivity
     private String TAG;
 
     private INavigation _navigator;
-    //private NavigationFragment _navigationFragment;
+    private IWoopServer _woop;
 
     protected static ILogger _logger = new Logger();
     protected Menu _menu;
@@ -47,6 +53,9 @@ public class BaseActivity extends AppCompatActivity
 
         _google = new GoogleData(this, this);
 
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        _woop = WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
+
     }
 
    /* public void setNavigationFragment(){
@@ -61,6 +70,10 @@ public class BaseActivity extends AppCompatActivity
 
     public INavigation navigation(){
         return _navigator;
+    }
+
+    public IWoopServer woopServer(){
+        return _woop;
     }
 
     @Override

@@ -62,6 +62,12 @@ public class Navigation implements INavigation {
         changeFragment(YouTubeFragment.newInstance());
     }
 
+
+    @Override
+    public void navigateFragment8Tracks() {
+        //TODO: changeFragment(YouTubeFragment.newInstance());
+    }
+
     @Override
     public void navigateFragmentSettings() {
         changeFragment(SettingsFragment.newInstance());

@@ -1,28 +1,29 @@
 package com.client.woop.woop.data;
 
-import android.net.Uri;
-
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
 import com.client.woop.woop.data.interfaces.IClientDataStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.models.StreamModel;
+import com.client.woop.woop.web.HttpOptions;
+import com.client.woop.woop.web.HttpRequest;
+import com.client.woop.woop.web.HttpRequestType;
 import com.client.woop.woop.web.JSONDownloader;
-import com.client.woop.woop.web.StringDownloader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class WoopServer implements IWoopServer {
 
     private static String TAG = WoopServer.class.getSimpleName();
-    private static String SERVICE_HOST_ADDRESS = "Service_Host_Address";
+    private static String SHARED_DATA_SERVICE_HOST_ADDRESS = "Service_Host_Address";
     private static WoopServer _server;
 
     private static ILogger _logger = new Logger();
@@ -55,7 +56,7 @@ public class WoopServer implements IWoopServer {
 
     @Override
     public boolean isServiceAdressSet() {
-        _serviceHostAdress = _storage.getString(SERVICE_HOST_ADDRESS);
+        _serviceHostAdress = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
         if(_serviceHostAdress == null){
             return false;
         }
@@ -67,18 +68,20 @@ public class WoopServer implements IWoopServer {
 
         String subnet = _deviceData.getIPAddress();
         subnet = "http://" + subnet.substring(0, subnet.lastIndexOf('.')+1);
-        final List<StringDownloader> downloader = new ArrayList<>();
+        final List<HttpRequest> downloader = new ArrayList<>();
 
         for(int i = 1; i < 255; i ++){
-            downloader.add( new StringDownloader(subnet + i +":8000", 500,  new StringDownloader.DownloadCompleteListener() {
+            downloader.add( new HttpRequest(new HttpOptions(subnet + i +":8000", 500),  new HttpRequest.DownloadCompleteListener() {
                 @Override
-                public void completionCallBack(String uri, String result) {
-                    _serviceHostAdress = uri;
-                    for(int i = 0; i < downloader.size(); i++){
-                        downloader.get(i).cancel(true);
+                public void completionCallBack(HttpOptions options, String result) {
+                    if(result != null) {
+                        _serviceHostAdress = options.url;
+                        for (int i = 0; i < downloader.size(); i++) {
+                            downloader.get(i).cancel(true);
+                        }
+                        _storage.putString(SHARED_DATA_SERVICE_HOST_ADDRESS, _serviceHostAdress);
+                        listener.serviceFound();
                     }
-                    _storage.putString(SERVICE_HOST_ADDRESS, _serviceHostAdress);
-                    listener.serviceFound();
                 }
             }));
         }
@@ -91,7 +94,7 @@ public class WoopServer implements IWoopServer {
 
     @Override
     public void resetService() {
-        _storage.removeKey(SERVICE_HOST_ADDRESS);
+        _storage.removeKey(SHARED_DATA_SERVICE_HOST_ADDRESS);
     }
 
     @Override
@@ -110,6 +113,20 @@ public class WoopServer implements IWoopServer {
                     _logger.info(TAG, e.toString());
                 }
                 result.dataReceived(streams);
+            }
+        }).execute();
+    }
+
+    @Override
+    public void playSavedStream(StreamModel stream) {
+        HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/playStream", HttpRequestType.POST);
+        HashMap<String, String> data = new HashMap<>();
+        data.put("stream", stream.getStream());
+        options.setPostData(data);
+        new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
+            @Override
+            public void completionCallBack(HttpOptions options, String result) {
+                String tmp = result;
             }
         }).execute();
     }

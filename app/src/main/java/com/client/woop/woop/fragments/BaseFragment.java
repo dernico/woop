@@ -23,10 +23,11 @@ public class BaseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        _navigation = ((BaseActivity) getActivity()).navigation();
+        BaseActivity parent = ((BaseActivity) getActivity());
+        _navigation = parent.navigation();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         _storage = new ClientDataStorage(prefs);
-        _woop = WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
+        _woop = parent.woopServer();
     }
 }

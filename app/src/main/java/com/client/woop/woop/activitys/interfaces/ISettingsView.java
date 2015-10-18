@@ -1,4 +1,4 @@
-package com.client.woop.woop.activitys;
+package com.client.woop.woop.activitys.interfaces;
 
 
 public interface ISettingsView {

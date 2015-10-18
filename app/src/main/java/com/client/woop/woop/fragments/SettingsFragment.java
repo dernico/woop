@@ -2,19 +2,16 @@ package com.client.woop.woop.fragments;
 
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.client.woop.woop.R;
-import com.client.woop.woop.activitys.ISettingsView;
+import com.client.woop.woop.activitys.interfaces.ISettingsView;
 import com.client.woop.woop.controller.SettingsController;
-import com.client.woop.woop.data.WoopServer;
 
 /**
  * A simple {@link Fragment} subclass.

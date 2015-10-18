@@ -9,8 +9,9 @@
     <string name="navigation_open">Navigation Open</string>
     <string name="navigation_close">Navigation Close</string>
 
-    <string name="navigation_liste">Liste</string>
+    <string name="navigation_liste">Your Music</string>
     <string name="navigation_streams">Streams</string>
+    <string name="navigation_8_tracks">8 tracks</string>
     <string name="navigation_youtube">You Tube</string>
     <string name="navigation_settings">Settings</string>
 

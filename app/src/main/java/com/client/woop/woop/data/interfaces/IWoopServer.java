@@ -12,4 +12,5 @@ public interface IWoopServer {
     void resetService();
 
     void getSavedStreams(WoopServer.WoopDataReceived<List<StreamModel>> result);
+    void playSavedStream(StreamModel stream);
 }

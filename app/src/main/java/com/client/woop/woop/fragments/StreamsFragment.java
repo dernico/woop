@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.client.woop.woop.R;
@@ -59,6 +60,12 @@ public class StreamsFragment extends BaseFragment implements IStreamsView{
 
         _controller = new StreamsController(this,_woop);
         _listView = (ListView) v.findViewById(R.id.fragment_streams_list);
+        _listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                _controller.playStream(position);
+            }
+        });
 
         _controller.loadStreams();
         return v;

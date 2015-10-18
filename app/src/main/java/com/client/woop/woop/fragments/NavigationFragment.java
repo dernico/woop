@@ -98,6 +98,7 @@ public class NavigationFragment extends BaseFragment {
                 new String[]{
                         getString(R.string.navigation_liste),
                         getString(R.string.navigation_streams),
+                        getString(R.string.navigation_8_tracks),
                         getString(R.string.navigation_youtube),
                         getString(R.string.navigation_settings)
                 }));
@@ -231,9 +232,12 @@ public class NavigationFragment extends BaseFragment {
                 _navigation.navigateFragmentStreams();
                 break;
             case 2:
-                _navigation.navigateFragmentYouTube();
+                _navigation.navigateFragment8Tracks();
                 break;
             case 3:
+                _navigation.navigateFragmentYouTube();
+                break;
+            case 4:
                 _navigation.navigateFragmentSettings();
                 break;
             default:

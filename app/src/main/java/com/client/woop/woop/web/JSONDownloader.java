@@ -17,7 +17,7 @@ public class JSONDownloader {
 
     private static String TAG = JSONDownloader.class.getSimpleName();
 
-    private StringDownloader _downloader;
+    private HttpRequest _downloader;
     private ILogger _logger;
 
     public JSONDownloader(String link, final JSONDownloadCompleteListener jsonListener){
@@ -27,16 +27,18 @@ public class JSONDownloader {
             throw new Resources.NotFoundException("listener was null. You need to have listener");
         }
 
-        _downloader = new StringDownloader(link, 1000, new StringDownloader.DownloadCompleteListener() {
+        _downloader = new HttpRequest(new HttpOptions(link, 1000), new HttpRequest.DownloadCompleteListener() {
             @Override
-            public void completionCallBack(String uri, String result) {
-                JSONObject json = null;
-                try {
-                   json = new JSONObject(result);
-                } catch (JSONException e) {
-                    _logger.info(TAG, e.toString());
+            public void completionCallBack(HttpOptions options, String result) {
+                if(result != null) {
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(result);
+                    } catch (JSONException e) {
+                        _logger.info(TAG, e.toString());
+                    }
+                    jsonListener.jsonComplete(json);
                 }
-                jsonListener.jsonComplete(json);
             }
         });
     }

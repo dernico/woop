@@ -8,6 +8,7 @@ public interface INavigation {
     void navigateStartFragment();
     void navigateFragmentList();
     void navigateFragmentStreams();
+    void navigateFragment8Tracks();
     void navigateFragmentYouTube();
     void navigateFragmentSettings();
 }

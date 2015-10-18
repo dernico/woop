@@ -1,4 +1,4 @@
-package com.client.woop.woop.data;
+package com.client.woop.woop.data.interfaces;
 
 import com.client.woop.woop.models.Person;
 

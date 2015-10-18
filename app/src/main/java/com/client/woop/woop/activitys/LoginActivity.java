@@ -1,15 +1,10 @@
 package com.client.woop.woop.activitys;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 
 import com.client.woop.woop.R;
-import com.client.woop.woop.data.GoogleData;
-import com.client.woop.woop.data.IGoogleData;
 import com.google.android.gms.common.SignInButton;
 
 public class LoginActivity extends BaseActivity {
