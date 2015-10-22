@@ -226,22 +226,22 @@ public class NavigationFragment extends BaseFragment {
         }
         switch (position){
             case 0:
-                _navigation.navigateFragmentList();
+                navigation().navigateFragmentList();
                 break;
             case 1:
-                _navigation.navigateFragmentStreams();
+                navigation().navigateFragmentStreams();
                 break;
             case 2:
-                _navigation.navigateFragment8Tracks();
+                navigation().navigateFragment8Tracks();
                 break;
             case 3:
-                _navigation.navigateFragmentYouTube();
+                navigation().navigateFragmentYouTube();
                 break;
             case 4:
-                _navigation.navigateFragmentSettings();
+                navigation().navigateFragmentSettings();
                 break;
             default:
-                _navigation.navigateFragmentList();
+                navigation().navigateFragmentList();
         }
 
     }

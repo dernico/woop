@@ -50,7 +50,7 @@ public class SettingsFragment extends BaseFragment implements ISettingsView{
                              Bundle savedInstanceState) {
 
         _progressDialog = new ProgressDialog(getActivity());
-        _controller = new SettingsController(this, _woop, _navigation);
+        _controller = new SettingsController(this, woopServer(), navigation());
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_settings, container, false);

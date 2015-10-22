@@ -1,4 +1,4 @@
-package com.client.woop.woop.activitys.interfaces;
+package com.client.woop.woop.fragments.interfaces;
 
 import com.client.woop.woop.models.StreamModel;
 

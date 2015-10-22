@@ -1,6 +1,6 @@
 package com.client.woop.woop.controller;
 
-import com.client.woop.woop.activitys.interfaces.ISavedStreamsView;
+import com.client.woop.woop.fragments.interfaces.ISavedStreamsView;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.models.PlayingInfo;

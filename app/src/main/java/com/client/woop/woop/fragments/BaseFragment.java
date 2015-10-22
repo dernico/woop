@@ -14,9 +14,9 @@ import com.client.woop.woop.navigation.INavigation;
 
 public class BaseFragment extends Fragment {
 
-    protected INavigation _navigation;
-    protected IClientDataStorage _storage;
-    protected IWoopServer _woop;
+    private INavigation _navigation;
+    private IClientDataStorage _storage;
+    private IWoopServer _woop;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,4 +28,12 @@ public class BaseFragment extends Fragment {
         _storage = new ClientDataStorage(prefs);
         _woop = parent.woopServer();
     }
+
+    public IWoopServer woopServer(){
+        return _woop;
+    }
+
+    public INavigation navigation(){return _navigation;}
+
+    public IClientDataStorage storage(){return _storage;}
 }
