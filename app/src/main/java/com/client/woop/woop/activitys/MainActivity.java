@@ -23,7 +23,7 @@ public class MainActivity extends BaseActivity implements IMainView {
     }
 
     private void setNavigationFragment() {
-        NavigationFragment navigationFragment = (NavigationFragment) getFragmentManager()
+        NavigationFragment navigationFragment = (NavigationFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.navigation_fragment);
 
         navigationFragment.setUp(

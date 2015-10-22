@@ -13,6 +13,7 @@ public class JSONDownloader {
 
     public interface JSONDownloadCompleteListener{
         void jsonComplete(JSONObject json);
+        void errorOccured(Exception ex);
     }
 
     private static String TAG = JSONDownloader.class.getSimpleName();
@@ -35,10 +36,19 @@ public class JSONDownloader {
                     try {
                         json = new JSONObject(result);
                     } catch (JSONException e) {
-                        _logger.info(TAG, e.toString());
+                        options.setError(e);
                     }
-                    jsonListener.jsonComplete(json);
+                    if(options.hasError){
+                        jsonListener.errorOccured(options.getError());
+                    }else{
+                        jsonListener.jsonComplete(json);
+                    }
                 }
+            }
+
+            @Override
+            public void errorCallBack(HttpOptions options) {
+                jsonListener.errorOccured(options.getError());
             }
         });
     }

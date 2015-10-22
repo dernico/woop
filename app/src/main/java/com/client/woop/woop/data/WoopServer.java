@@ -5,6 +5,7 @@ import com.client.woop.woop.Logger;
 import com.client.woop.woop.data.interfaces.IClientDataStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
+import com.client.woop.woop.models.PlayingInfo;
 import com.client.woop.woop.models.StreamModel;
 import com.client.woop.woop.web.HttpOptions;
 import com.client.woop.woop.web.HttpRequest;
@@ -38,6 +39,7 @@ public class WoopServer implements IWoopServer {
 
     public interface WoopDataReceived<T>{
         void dataReceived(T result);
+        void errorReceived(Exception ex);
     }
 
 
@@ -83,6 +85,11 @@ public class WoopServer implements IWoopServer {
                         listener.serviceFound();
                     }
                 }
+
+                @Override
+                public void errorCallBack(HttpOptions options) {
+                    _logger.info(TAG, options.getError().toString());
+                }
             }));
         }
 
@@ -114,11 +121,16 @@ public class WoopServer implements IWoopServer {
                 }
                 result.dataReceived(streams);
             }
+
+            @Override
+            public void errorOccured(Exception ex) {
+                result.errorReceived(ex);
+            }
         }).execute();
     }
 
     @Override
-    public void playSavedStream(StreamModel stream) {
+    public void playSavedStream(StreamModel stream, final WoopDataReceived<PlayingInfo> listener) {
         HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/playStream", HttpRequestType.POST);
         HashMap<String, String> data = new HashMap<>();
         data.put("stream", stream.getStream());
@@ -126,7 +138,16 @@ public class WoopServer implements IWoopServer {
         new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
             @Override
             public void completionCallBack(HttpOptions options, String result) {
-                String tmp = result;
+                try {
+                    listener.dataReceived(PlayingInfo.createFromJson(new JSONObject(result)));
+                } catch (JSONException e) {
+                    listener.errorReceived(e);
+                }
+            }
+
+            @Override
+            public void errorCallBack(HttpOptions options) {
+                listener.errorReceived(options.getError());
             }
         }).execute();
     }

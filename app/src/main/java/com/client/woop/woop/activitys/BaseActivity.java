@@ -6,8 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -116,9 +114,14 @@ public class BaseActivity extends AppCompatActivity
 
         if(_menu == null){
             _logger.error(TAG,"Menu object was null wen trying to set Menu Icon");
+            return;
         }
 
-
+        MenuItem item = _menu.findItem(R.id.action_user_icon);
+        if (item == null){
+            _logger.info(TAG,"Could not find R.id.action_user_icon, so I don't set it");
+            return;
+        }
 
         if(_icon == null){
 
@@ -135,8 +138,8 @@ public class BaseActivity extends AppCompatActivity
             }).execute(person.getImageUrl());
         }else{
 
-            MenuItem item = _menu.findItem(R.id.action_user_icon);
             item.setIcon(_icon);
+
         }
     }
 

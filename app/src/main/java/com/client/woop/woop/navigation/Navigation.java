@@ -2,11 +2,10 @@ package com.client.woop.woop.navigation;
 
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.ListFragment;
-import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.content.Intent;
-import android.app.FragmentManager;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
 import com.client.woop.woop.R;
 import com.client.woop.woop.activitys.LoginActivity;
@@ -18,9 +17,9 @@ import com.client.woop.woop.fragments.YouTubeFragment;
 
 public class Navigation implements INavigation {
 
-    private Activity _context;
+    private AppCompatActivity _context;
 
-    public Navigation(Activity context){
+    public Navigation(AppCompatActivity context){
         _context = context;
     }
 
@@ -41,7 +40,7 @@ public class Navigation implements INavigation {
 
     private void changeFragment(Fragment fragment){
         //TODO: Make sure MainActivity is loaded
-        FragmentManager fragmentManager = _context.getFragmentManager();
+        FragmentManager fragmentManager = _context.getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();

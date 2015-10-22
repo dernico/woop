@@ -25,11 +25,12 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 
     public interface DownloadCompleteListener {
         void completionCallBack(HttpOptions options, String result);
+        void errorCallBack(HttpOptions options);
     }
+
 
     private DownloadCompleteListener _listener;
     private HttpOptions _options;
-    private int _timeout;
 
     public HttpRequest(HttpOptions options, DownloadCompleteListener aListener) {
         _listener = aListener;
@@ -72,17 +73,19 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            _options.setError(e);
         } catch (ProtocolException e) {
-            e.printStackTrace();
+            _options.setError(e);
+        } catch (UnsupportedEncodingException e) {
+            _options.setError(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            _options.setError(e);
         } finally {
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    _options.setError(e);
                 }
             }
         }
@@ -128,7 +131,10 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        if (!isCancelled()) {
+        if(_options.hasError){
+            _listener.errorCallBack(_options);
+        }
+        else if (!isCancelled()) {
             _listener.completionCallBack(_options, result);
         }
     }

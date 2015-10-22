@@ -1,16 +1,21 @@
 package com.client.woop.woop.fragments;
 
 import android.app.Activity;
+import android.app.LocalActivityManager;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TabHost;
 
 import com.client.woop.woop.R;
+import com.client.woop.woop.activitys.SavedStreamsActivity;
 import com.client.woop.woop.adapter.FavoriteStreamAdapter;
 import com.client.woop.woop.controller.StreamsController;
 import com.client.woop.woop.data.WoopServer;
@@ -27,8 +32,6 @@ import java.util.List;
 public class StreamsFragment extends BaseFragment implements IStreamsView{
 
     private StreamsController _controller;
-
-    private ListView _listView;
 
     /**
      * Use this factory method to create a new instance of
@@ -59,32 +62,21 @@ public class StreamsFragment extends BaseFragment implements IStreamsView{
         View v = inflater.inflate(R.layout.fragment_streams, container, false);
 
         _controller = new StreamsController(this,_woop);
-        _listView = (ListView) v.findViewById(R.id.fragment_streams_list);
-        _listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                _controller.playStream(position);
-            }
-        });
 
-        _controller.loadStreams();
+
+        // create the TabHost that will contain the Tabs
+        FragmentTabHost tabHost = (FragmentTabHost) v.findViewById(R.id.fragment_streams_tabhost);
+
+        tabHost.setup(getContext(), getChildFragmentManager(), android.R.id.tabcontent);
+
+        tabHost.addTab(
+                tabHost.newTabSpec("tab1").setIndicator(getString(R.string.streams_tabs_saved), null),
+                YouTubeFragment.class, null);
+
+        tabHost.addTab(
+                tabHost.newTabSpec("tab2").setIndicator(getString(R.string.streams_tabs_search), null),
+                ListeFragment.class, null);
+
         return v;
-    }
-
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        /*try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
-    }
-
-    @Override
-    public void setStreams(List<StreamModel> streams) {
-        _listView.setAdapter(new FavoriteStreamAdapter(getActivity(), streams));
     }
 }
