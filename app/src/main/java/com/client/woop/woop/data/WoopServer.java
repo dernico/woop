@@ -7,6 +7,7 @@ import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.models.PlayingInfo;
 import com.client.woop.woop.models.StreamModel;
+import com.client.woop.woop.models.TuneInModel;
 import com.client.woop.woop.web.HttpOptions;
 import com.client.woop.woop.web.HttpRequest;
 import com.client.woop.woop.web.HttpRequestType;
@@ -16,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,7 +134,10 @@ public class WoopServer implements IWoopServer {
 
     @Override
     public void playSavedStream(StreamModel stream, final WoopDataReceived<PlayingInfo> listener) {
-        HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/playStream", HttpRequestType.POST);
+        HttpOptions options = new HttpOptions(
+                _serviceHostAdress + "/api/music/playStream",
+                HttpRequestType.POST);
+
         HashMap<String, String> data = new HashMap<>();
         data.put("stream", stream.getStream());
         options.setPostData(data);
@@ -148,6 +154,41 @@ public class WoopServer implements IWoopServer {
             @Override
             public void errorCallBack(HttpOptions options) {
                 listener.errorReceived(options.getError());
+            }
+        }).execute();
+    }
+
+    @Override
+    public void searchStream(String query, final WoopDataReceived<List<TuneInModel>> callback) {
+        try {
+            query = URLEncoder.encode(query, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            //Don't know why, but try the search without urlencoder
+        }
+
+        HttpOptions options = new HttpOptions(
+                _serviceHostAdress + "/api/tunein/search?search="+query
+        );
+
+        new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
+            @Override
+            public void completionCallBack(HttpOptions options, String result) {
+                try {
+                    List<TuneInModel> streams = new ArrayList();
+                    JSONObject json = new JSONObject(result);
+                    JSONArray results = json.getJSONArray("result");
+                    for(int i = 0; i < results.length(); i++){
+                        streams.add(TuneInModel.create(results.getJSONObject(i)));
+                    }
+                    callback.dataReceived(streams);
+                } catch (JSONException e) {
+                    callback.errorReceived(e);
+                }
+            }
+
+            @Override
+            public void errorCallBack(HttpOptions options) {
+                callback.errorReceived(options.getError());
             }
         }).execute();
     }

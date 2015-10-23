@@ -3,7 +3,7 @@ package com.client.woop.woop.web;
 import java.util.HashMap;
 
 public class HttpOptions{
-    private static int defaultTimeout = 1000;
+    private static int defaultTimeout = 3000;
 
     public String url;
     public int timeout;

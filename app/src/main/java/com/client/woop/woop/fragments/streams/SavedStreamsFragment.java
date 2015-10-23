@@ -1,4 +1,4 @@
-package com.client.woop.woop.fragments;
+package com.client.woop.woop.fragments.streams;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.client.woop.woop.R;
+import com.client.woop.woop.fragments.BaseFragment;
 import com.client.woop.woop.fragments.interfaces.ISavedStreamsView;
 import com.client.woop.woop.adapter.FavoriteStreamAdapter;
 import com.client.woop.woop.controller.SavedStreamsController;

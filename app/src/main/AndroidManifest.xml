@@ -26,7 +26,7 @@
             android:name=".activitys.MainActivity"
             android:label="@string/title_activity_main" >
         </activity>
-        <activity android:name=".fragments.SavedStreamsFragment" >
+        <activity android:name=".fragments.streams.SavedStreamsFragment" >
         </activity>
     </application>
 

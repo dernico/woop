@@ -1,4 +1,4 @@
-package com.client.woop.woop.fragments;
+package com.client.woop.woop.fragments.youtube;
 
 import android.app.Activity;
 import android.net.Uri;

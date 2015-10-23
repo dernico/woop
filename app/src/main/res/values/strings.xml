@@ -17,6 +17,7 @@
 
     <string name="streams_tabs_saved">Saved</string>
     <string name="streams_tabs_search">Search</string>
+    <string name="streams_search_button_search">Search</string>
 
     <string name="settings_search_server_button">Try find server </string>
     <string name="settings_reset_server_button">Reset </string>

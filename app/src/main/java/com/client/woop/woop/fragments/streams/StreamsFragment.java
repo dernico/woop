@@ -1,4 +1,4 @@
-package com.client.woop.woop.fragments;
+package com.client.woop.woop.fragments.streams;
 
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.client.woop.woop.R;
 import com.client.woop.woop.controller.StreamsController;
+import com.client.woop.woop.fragments.BaseFragment;
+import com.client.woop.woop.fragments.locals.ListeFragment;
 import com.client.woop.woop.fragments.interfaces.IStreamsView;
 
 /**
@@ -50,12 +52,12 @@ public class StreamsFragment extends BaseFragment implements IStreamsView{
         tabHost.setup(getContext(), getChildFragmentManager(), android.R.id.tabcontent);
 
         tabHost.addTab(
-                tabHost.newTabSpec("tab1").setIndicator(getString(R.string.streams_tabs_saved), null),
+                tabHost.newTabSpec(getString(R.string.streams_tabs_saved)).setIndicator(getString(R.string.streams_tabs_saved), null),
                 SavedStreamsFragment.class, null);
 
         tabHost.addTab(
-                tabHost.newTabSpec("tab2").setIndicator(getString(R.string.streams_tabs_search), null),
-                ListeFragment.class, null);
+                tabHost.newTabSpec(getString(R.string.streams_tabs_search)).setIndicator(getString(R.string.streams_tabs_search), null),
+                SearchStreamsFragment.class, null);
 
         return v;
     }

@@ -1,4 +1,4 @@
-package com.client.woop.woop.fragments;
+package com.client.woop.woop.fragments.settings;
 
 
 import android.app.ProgressDialog;
@@ -12,6 +12,7 @@ import android.widget.Button;
 import com.client.woop.woop.R;
 import com.client.woop.woop.activitys.interfaces.ISettingsView;
 import com.client.woop.woop.controller.SettingsController;
+import com.client.woop.woop.fragments.BaseFragment;
 
 /**
  * A simple {@link Fragment} subclass.
