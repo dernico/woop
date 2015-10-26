@@ -41,20 +41,17 @@ public class PlayControlsController implements
         _woop.shuffle(this);
     }
 
-    @Override
-    public void dataReceived(PlayingInfo result) {
-        this.setPlayState(result);
-        _view.setVolume("" + result.Volume);
+    public void volUp(){
+        _woop.volumeUp(this);
     }
 
-    @Override
-    public void errorReceived(Exception ex) {
-        //TODO: Handle Error properly
+    public void volDown(){
+        _woop.volumeDown(this);
     }
 
-    @Override
-    public void infoChanged(PlayingInfo info) {
-        setPlayState(info);
+    private void setInfoStates(PlayingInfo info){
+        this.setPlayState(info);
+        _view.setVolume("" + info.Volume);
     }
 
     private void setPlayState(PlayingInfo info){
@@ -66,6 +63,24 @@ public class PlayControlsController implements
         else{
             _view.setPause();
         }
+    }
+
+    @Override
+    public void dataReceived(PlayingInfo result) {
+        // Nothing needs to be done here,
+        // cause the infoChanged also gets the current PlayingInfo
+
+        //this.setInfoStates(result);
+    }
+
+    @Override
+    public void errorReceived(Exception ex) {
+        //TODO: Handle Error properly
+    }
+
+    @Override
+    public void infoChanged(PlayingInfo info) {
+        this.setInfoStates(info);
     }
 
 }

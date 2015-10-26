@@ -5,6 +5,7 @@ import com.client.woop.woop.Logger;
 import com.client.woop.woop.data.interfaces.IClientDataStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
+import com.client.woop.woop.models.MyMusicModel;
 import com.client.woop.woop.models.PlayingInfo;
 import com.client.woop.woop.models.StreamModel;
 import com.client.woop.woop.models.TuneInModel;
@@ -150,6 +151,11 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
+    public void play(MyMusicModel model, WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/play?id=" + model.get_id(), callback);
+    }
+
+    @Override
     public void pause(WoopDataReceived<PlayingInfo> callback) {
         this.playControlCall("/api/music/pause", callback);
     }
@@ -177,6 +183,32 @@ public class WoopServer implements IWoopServer {
     @Override
     public void volumeDown(WoopDataReceived<PlayingInfo> callback) {
         this.playControlCall("/api/music/volumeDown", callback);
+    }
+
+    @Override
+    public void getMyMusic(final WoopDataReceived<List<MyMusicModel>> callback) {
+        HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/listcomplete");
+        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(JSONObject json) {
+                try {
+                    int count = json.getInt("count");
+                    JSONArray liste = json.getJSONArray("list");
+                    List<MyMusicModel> mymusic = new ArrayList<>();
+                    for(int i = 0; i < liste.length(); i++){
+                        mymusic.add(MyMusicModel.create(liste.getJSONObject(i)));
+                    }
+                    callback.dataReceived(mymusic);
+                } catch (JSONException e) {
+                    callback.errorReceived(e);
+                }
+            }
+
+            @Override
+            public void errorOccured(Exception ex) {
+                callback.errorReceived(ex);
+            }
+        }).execute();
     }
 
 

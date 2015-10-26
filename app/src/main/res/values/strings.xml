@@ -8,6 +8,7 @@
 
     <string name="fragment_play_controls_playText">Play</string>
     <string name="fragment_play_controls_pauseText">Pause</string>
+    <string name="fragment_play_controls_volume">Volume: </string>
 
     <string name="navigation_open">Navigation Open</string>
     <string name="navigation_close">Navigation Close</string>

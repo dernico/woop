@@ -9,19 +9,21 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true">
 
-        <EditText
-            android:id="@+id/fragment_streams_search_query"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content" />
-
 
         <Button
             android:id="@+id/fragment_streams_search_button_search"
             android:text="@string/streams_search_button_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/fragment_streams_search_query"
-            android:layout_marginLeft="@dimen/ten_dp_margin"/>
+            android:layout_marginRight="@dimen/ten_dp_margin"/>
+
+        <EditText
+            android:id="@+id/fragment_streams_search_query"
+            android:layout_toRightOf="@id/fragment_streams_search_button_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 

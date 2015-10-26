@@ -1,6 +1,7 @@
 package com.client.woop.woop.data.interfaces;
 
 import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.models.MyMusicModel;
 import com.client.woop.woop.models.PlayingInfo;
 import com.client.woop.woop.models.StreamModel;
 import com.client.woop.woop.models.TuneInModel;
@@ -20,12 +21,15 @@ public interface IWoopServer {
 
     void callinfo();
     void play(WoopServer.WoopDataReceived<PlayingInfo> callback);
+    void play(MyMusicModel model, WoopServer.WoopDataReceived<PlayingInfo> callback);
     void pause(WoopServer.WoopDataReceived<PlayingInfo> callback);
     void prev(WoopServer.WoopDataReceived<PlayingInfo> callback);
     void next(WoopServer.WoopDataReceived<PlayingInfo> callback);
     void shuffle(WoopServer.WoopDataReceived<PlayingInfo> callback);
     void volumeUp(WoopServer.WoopDataReceived<PlayingInfo> callback);
     void volumeDown(WoopServer.WoopDataReceived<PlayingInfo> callback);
+
+    void getMyMusic(WoopServer.WoopDataReceived<List<MyMusicModel>> callback);
 
     void getSavedStreams(WoopServer.WoopDataReceived<List<StreamModel>> result);
     void playSavedStream(StreamModel stream, WoopServer.WoopDataReceived<PlayingInfo> callback);

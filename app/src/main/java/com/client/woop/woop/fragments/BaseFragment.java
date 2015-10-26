@@ -1,6 +1,7 @@
 package com.client.woop.woop.fragments;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
