@@ -6,6 +6,9 @@
     <string name="login_login_text">Please login with your google Account</string>
     <string name="title_activity_main">Woop</string>
 
+    <string name="fragment_play_controls_playText">Play</string>
+    <string name="fragment_play_controls_pauseText">Pause</string>
+
     <string name="navigation_open">Navigation Open</string>
     <string name="navigation_close">Navigation Close</string>
 
@@ -27,6 +30,9 @@
         You need to add a fragment with the id:navigation_fragment into your Activity</string>
 
     <string name="error_drawer_layout_not_found">The Activity needs to be a Drawer Layout</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

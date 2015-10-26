@@ -6,6 +6,7 @@ public interface INavigation {
     void navigateLogin();
 
     void navigateStartFragment();
+    void goBack();
     void navigateFragmentList();
     void navigateFragmentStreams();
     void navigateFragment8Tracks();

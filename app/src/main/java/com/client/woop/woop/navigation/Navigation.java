@@ -33,6 +33,11 @@ public class Navigation implements INavigation {
     }
 
     @Override
+    public void goBack(){
+        _context.getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
     public void navigateStartFragment() {
         navigateFragmentList();
     }
@@ -42,6 +47,7 @@ public class Navigation implements INavigation {
         FragmentManager fragmentManager = _context.getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
+                .addToBackStack(fragment.getTag())
                 .commit();
     }
 

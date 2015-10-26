@@ -30,23 +30,15 @@
 
     </android.support.v4.widget.DrawerLayout>
 
-
-
-    <LinearLayout android:id="@+id/activity_main_player_control"
-        android:layout_width="fill_parent"
+    <fragment
+        android:id="@+id/activity_main_player_control"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        style="@android:style/ButtonBar">
+        android:name="com.client.woop.woop.fragments.PlayControls"
+        tools:layout="@layout/fragment_play_controls"
+        android:layout_alignParentBottom="true">
 
-        <Button android:id="@+id/saveButton" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_weight="1"
-            android:text="Play" />
-
-        <Button android:id="@+id/cancelButton" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_weight="1"
-            android:text="Stop" />
-    </LinearLayout>
+    </fragment>
 
 </RelativeLayout>
 

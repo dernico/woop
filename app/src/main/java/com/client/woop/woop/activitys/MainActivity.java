@@ -31,6 +31,17 @@ public class MainActivity extends BaseActivity implements IMainView {
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
+
+    @Override
+    public void onBackPressed(){
+        // bigger 1 because the first one is the start fragment
+        if (getFragmentManager().getBackStackEntryCount() > 1 ){
+            navigation().goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     @Override
     public void onStart(){
         super.onStart();

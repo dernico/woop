@@ -21,14 +21,14 @@ public class JSONDownloader {
     private HttpRequest _downloader;
     private ILogger _logger;
 
-    public JSONDownloader(String link, final JSONDownloadCompleteListener jsonListener){
+    public JSONDownloader(HttpOptions options, final JSONDownloadCompleteListener jsonListener){
         _logger = new Logger();
 
         if(jsonListener == null){
             throw new Resources.NotFoundException("listener was null. You need to have listener");
         }
 
-        _downloader = new HttpRequest(new HttpOptions(link, 1000), new HttpRequest.DownloadCompleteListener() {
+        _downloader = new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
             @Override
             public void completionCallBack(HttpOptions options, String result) {
                 if(result != null) {

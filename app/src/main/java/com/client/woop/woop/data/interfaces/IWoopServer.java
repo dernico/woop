@@ -10,11 +10,22 @@ import java.util.List;
 
 public interface IWoopServer {
     boolean isServiceAdressSet();
-    void findService(WoopServer.WoopServerListener listener);
+    void findService(WoopServer.WoopServerListener callback);
     void resetService();
 
+    PlayingInfo currentPlayingInfo();
+    boolean isPlaying();
+
+    void play(WoopServer.WoopDataReceived<PlayingInfo> callback);
+    void pause(WoopServer.WoopDataReceived<PlayingInfo> callback);
+    void prev(WoopServer.WoopDataReceived<PlayingInfo> callback);
+    void next(WoopServer.WoopDataReceived<PlayingInfo> callback);
+    void shuffle(WoopServer.WoopDataReceived<PlayingInfo> callback);
+    void volumeUp(WoopServer.WoopDataReceived<PlayingInfo> callback);
+    void volumeDown(WoopServer.WoopDataReceived<PlayingInfo> callback);
+
     void getSavedStreams(WoopServer.WoopDataReceived<List<StreamModel>> result);
-    void playSavedStream(StreamModel stream, WoopServer.WoopDataReceived<PlayingInfo> listener);
+    void playSavedStream(StreamModel stream, WoopServer.WoopDataReceived<PlayingInfo> callback);
 
     void searchStream(String query, WoopServer.WoopDataReceived<List<TuneInModel>> callback);
 }

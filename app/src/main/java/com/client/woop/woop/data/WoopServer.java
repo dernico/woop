@@ -35,6 +35,7 @@ public class WoopServer implements IWoopServer {
 
     private IClientDataStorage _storage;
     private IDeviceData _deviceData;
+    private PlayingInfo _currentPlayinginfo;
 
     public interface WoopServerListener{
         void serviceFound();
@@ -108,9 +109,75 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
+    public PlayingInfo currentPlayingInfo() {
+        return _currentPlayinginfo;
+    }
+
+    @Override
+    public boolean isPlaying() {
+        if(_currentPlayinginfo == null){
+            return false;
+        }
+        return _currentPlayinginfo.IsPlaying;
+    }
+
+    private void playControlCall(String apiPart, final WoopDataReceived<PlayingInfo> callback){
+
+        HttpOptions options = new HttpOptions(_serviceHostAdress + apiPart);
+        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(JSONObject json) {
+                _currentPlayinginfo = PlayingInfo.createFromJson(json);
+                callback.dataReceived(_currentPlayinginfo);
+            }
+
+            @Override
+            public void errorOccured(Exception ex) {
+                callback.errorReceived(ex);
+            }
+        }).execute();
+    }
+
+    @Override
+    public void play(final WoopServer.WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/play", callback);
+    }
+
+    @Override
+    public void pause(WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/pause", callback);
+    }
+
+    @Override
+    public void prev(WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/prev", callback);
+    }
+
+    @Override
+    public void next(WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/next", callback);
+    }
+
+    @Override
+    public void shuffle(WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/toggleRandom", callback);
+    }
+
+    @Override
+    public void volumeUp(WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/volumeUp", callback);
+    }
+
+    @Override
+    public void volumeDown(WoopDataReceived<PlayingInfo> callback) {
+        this.playControlCall("/api/music/volumeDown", callback);
+    }
+
+
+    @Override
     public void getSavedStreams(final WoopDataReceived<List<StreamModel>> result) {
 
-        new JSONDownloader(_serviceHostAdress + "/api/music/streams", new JSONDownloader.JSONDownloadCompleteListener() {
+        new JSONDownloader(new HttpOptions(_serviceHostAdress + "/api/music/streams"), new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
             public void jsonComplete(JSONObject json) {
                 List<StreamModel> streams = new ArrayList<StreamModel>();
@@ -133,7 +200,7 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public void playSavedStream(StreamModel stream, final WoopDataReceived<PlayingInfo> listener) {
+    public void playSavedStream(StreamModel stream, final WoopDataReceived<PlayingInfo> callback) {
         HttpOptions options = new HttpOptions(
                 _serviceHostAdress + "/api/music/playStream",
                 HttpRequestType.POST);
@@ -141,19 +208,17 @@ public class WoopServer implements IWoopServer {
         HashMap<String, String> data = new HashMap<>();
         data.put("stream", stream.getStream());
         options.setPostData(data);
-        new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
+        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
-            public void completionCallBack(HttpOptions options, String result) {
-                try {
-                    listener.dataReceived(PlayingInfo.createFromJson(new JSONObject(result)));
-                } catch (JSONException e) {
-                    listener.errorReceived(e);
-                }
+            public void jsonComplete(JSONObject json) {
+
+                _currentPlayinginfo = PlayingInfo.createFromJson(json);
+                callback.dataReceived(_currentPlayinginfo);
             }
 
             @Override
-            public void errorCallBack(HttpOptions options) {
-                listener.errorReceived(options.getError());
+            public void errorOccured(Exception ex) {
+                callback.errorReceived(ex);
             }
         }).execute();
     }
