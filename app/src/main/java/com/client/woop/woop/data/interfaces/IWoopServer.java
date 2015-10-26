@@ -13,9 +13,12 @@ public interface IWoopServer {
     void findService(WoopServer.WoopServerListener callback);
     void resetService();
 
+    void subscribePlayingInfoChanged(WoopServer.WoopInfoChanged callback);
+
     PlayingInfo currentPlayingInfo();
     boolean isPlaying();
 
+    void callinfo();
     void play(WoopServer.WoopDataReceived<PlayingInfo> callback);
     void pause(WoopServer.WoopDataReceived<PlayingInfo> callback);
     void prev(WoopServer.WoopDataReceived<PlayingInfo> callback);

@@ -6,7 +6,10 @@ import com.client.woop.woop.fragments.interfaces.IPlayControlsView;
 import com.client.woop.woop.models.PlayingInfo;
 
 
-public class PlayControlsController implements WoopServer.WoopDataReceived<PlayingInfo>{
+public class PlayControlsController implements
+        WoopServer.WoopDataReceived<PlayingInfo> ,
+        WoopServer.WoopInfoChanged
+{
 
     IPlayControlsView _view;
     IWoopServer _woop;
@@ -14,7 +17,7 @@ public class PlayControlsController implements WoopServer.WoopDataReceived<Playi
     public PlayControlsController(IPlayControlsView view, IWoopServer woop){
         _view = view;
         _woop = woop;
-        this.setPlayState(_woop.currentPlayingInfo());
+        _woop.subscribePlayingInfoChanged(this);
     }
 
     public void play_pause(){
@@ -49,6 +52,11 @@ public class PlayControlsController implements WoopServer.WoopDataReceived<Playi
         //TODO: Handle Error properly
     }
 
+    @Override
+    public void infoChanged(PlayingInfo info) {
+        setPlayState(info);
+    }
+
     private void setPlayState(PlayingInfo info){
         if(info == null){ return; }
 
@@ -59,4 +67,5 @@ public class PlayControlsController implements WoopServer.WoopDataReceived<Playi
             _view.setPause();
         }
     }
+
 }

@@ -36,6 +36,7 @@ public class WoopServer implements IWoopServer {
     private IClientDataStorage _storage;
     private IDeviceData _deviceData;
     private PlayingInfo _currentPlayinginfo;
+    private WoopInfoChanged _infoChangedCallback;
 
     public interface WoopServerListener{
         void serviceFound();
@@ -46,10 +47,14 @@ public class WoopServer implements IWoopServer {
         void errorReceived(Exception ex);
     }
 
+    public interface WoopInfoChanged{
+        void infoChanged(PlayingInfo info);
+    }
 
     private WoopServer(IClientDataStorage storage, IDeviceData deviceData){
         _storage = storage;
         _deviceData = deviceData;
+        _serviceHostAdress = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
     }
 
     public static WoopServer singelton(IClientDataStorage storage, IDeviceData deviceData){
@@ -62,7 +67,6 @@ public class WoopServer implements IWoopServer {
 
     @Override
     public boolean isServiceAdressSet() {
-        _serviceHostAdress = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
         if(_serviceHostAdress == null){
             return false;
         }
@@ -109,33 +113,35 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
+    public void subscribePlayingInfoChanged(WoopInfoChanged callback) {
+        _infoChangedCallback = callback;
+        if(callback != null){
+            PlayingInfo info = currentPlayingInfo();
+            if(info != null) {
+                _infoChangedCallback.infoChanged(info);
+            }
+        }
+    }
+
+    @Override
     public PlayingInfo currentPlayingInfo() {
+        if(_currentPlayinginfo == null){
+            this.callinfo();
+        }
         return _currentPlayinginfo;
     }
 
     @Override
     public boolean isPlaying() {
-        if(_currentPlayinginfo == null){
+        if(currentPlayingInfo() == null){
             return false;
         }
-        return _currentPlayinginfo.IsPlaying;
+        return currentPlayingInfo().IsPlaying;
     }
 
-    private void playControlCall(String apiPart, final WoopDataReceived<PlayingInfo> callback){
-
-        HttpOptions options = new HttpOptions(_serviceHostAdress + apiPart);
-        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
-            @Override
-            public void jsonComplete(JSONObject json) {
-                _currentPlayinginfo = PlayingInfo.createFromJson(json);
-                callback.dataReceived(_currentPlayinginfo);
-            }
-
-            @Override
-            public void errorOccured(Exception ex) {
-                callback.errorReceived(ex);
-            }
-        }).execute();
+    @Override
+    public void callinfo() {
+        this.playControlCall("/api/music/info", null);
     }
 
     @Override
@@ -212,7 +218,7 @@ public class WoopServer implements IWoopServer {
             @Override
             public void jsonComplete(JSONObject json) {
 
-                _currentPlayinginfo = PlayingInfo.createFromJson(json);
+                setPlayingInfo(PlayingInfo.createFromJson(json));
                 callback.dataReceived(_currentPlayinginfo);
             }
 
@@ -258,4 +264,34 @@ public class WoopServer implements IWoopServer {
         }).execute();
     }
 
+    //private functions
+
+
+    private void playControlCall(String apiPart, final WoopDataReceived<PlayingInfo> callback){
+
+        HttpOptions options = new HttpOptions(_serviceHostAdress + apiPart);
+        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(JSONObject json) {
+                setPlayingInfo(PlayingInfo.createFromJson(json));
+                if(callback != null){
+                    callback.dataReceived(_currentPlayinginfo);
+                }
+            }
+
+            @Override
+            public void errorOccured(Exception ex) {
+                if(callback != null) {
+                    callback.errorReceived(ex);
+                }
+            }
+        }).execute();
+    }
+
+    private void setPlayingInfo(PlayingInfo info){
+        _currentPlayinginfo = info;
+        if(_infoChangedCallback != null){
+            _infoChangedCallback.infoChanged(info);
+        }
+    }
 }
