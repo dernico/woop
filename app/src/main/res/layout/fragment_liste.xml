@@ -3,11 +3,39 @@
     android:layout_height="match_parent"
     tools:context="com.client.woop.woop.fragments.locals.ListeFragment">
 
-    <fragment
+<!--    <fragment
         android:id="@+id/fragment_liste_mymusic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:name="com.client.woop.woop.fragments.locals.MyMusicFragment"
-        tools:layout="@layout/fragment_my_music"></fragment>
+        tools:layout="@layout/fragment_my_music"></fragment>-->
+
+
+    <android.support.v4.app.FragmentTabHost
+        android:id="@+id/fragment_liste_tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent">
+            </TabWidget>
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_height="fill_parent"
+                android:layout_width="fill_parent">
+            </FrameLayout>
+
+        </LinearLayout>
+
+
+    </android.support.v4.app.FragmentTabHost>
 
 </FrameLayout>

@@ -35,7 +35,7 @@ public class SavedStreamsFragment extends BaseFragment implements ISavedStreamsV
 
         _controller = new SavedStreamsController(this, woopServer());
 
-        _listView = (ListView) v.findViewById(R.id.activity_saved_streams_listview);
+        _listView = (ListView) v.findViewById(R.id.fragment_saved_streams_listview);
         _listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -36,6 +36,11 @@ public class TuneInAdapter extends ArrayAdapter<TuneInModel> {
     }
 
     @Override
+    public int getCount() {
+        return _streams.size();
+    }
+
+    @Override
     public View getView(final int position, View convertView, ViewGroup parent){
         View v = convertView;
         if(v == null){

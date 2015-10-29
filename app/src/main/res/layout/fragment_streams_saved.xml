@@ -6,7 +6,7 @@
     tools:context="com.client.woop.woop.fragments.streams.SavedStreamsFragment">
 
     <ListView
-        android:id="@+id/activity_saved_streams_listview"
+        android:id="@+id/fragment_saved_streams_listview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"></ListView>
 

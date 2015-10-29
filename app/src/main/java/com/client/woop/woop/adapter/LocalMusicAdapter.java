@@ -5,38 +5,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.client.woop.woop.R;
-import com.client.woop.woop.models.StreamModel;
+import com.client.woop.woop.models.LocalMusicModel;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
-public class FavoriteStreamAdapter extends ArrayAdapter<StreamModel> {
+public class LocalMusicAdapter extends ArrayAdapter<LocalMusicModel> {
 
-    private List<StreamModel> _streams;
+    private List<LocalMusicModel> _mymusic;
     private Context _context;
     private ImageLoader _imageLoader;
 
-    public FavoriteStreamAdapter(Context ctx, List<StreamModel> streams){
-        super(ctx, R.layout.adapter_streams_item, streams);
+    public LocalMusicAdapter(Context ctx, List<LocalMusicModel> mymusic){
+        super(ctx, R.layout.adapter_local_music_item, mymusic);
 
         _context = ctx;
-        _streams = streams;
+        _mymusic = mymusic;
 
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(_context)
-        .build();
+                .build();
         _imageLoader = ImageLoader.getInstance();
         _imageLoader.init(config);
     }
 
     @Override
     public int getCount() {
-        return _streams.size();
+        return _mymusic.size();
     }
 
     @Override
@@ -44,16 +43,22 @@ public class FavoriteStreamAdapter extends ArrayAdapter<StreamModel> {
         View v = convertView;
         if(v == null){
             LayoutInflater layout = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = layout.inflate(R.layout.adapter_streams_item ,null);
+            v = layout.inflate(R.layout.adapter_local_music_item ,null);
         }
 
-        StreamModel stream = _streams.get(position);
+        LocalMusicModel stream = _mymusic.get(position);
 
-        TextView tv = (TextView) v.findViewById(R.id.adapter_streams_item_name);
-        tv.setText(stream.getName());
+        TextView tv = (TextView) v.findViewById(R.id.adapter_local_music_item_title);
+        tv.setText(stream.get_title());
 
-        ImageView image = (ImageView) v.findViewById(R.id.adapter_streams_item_image);
-        _imageLoader.displayImage(stream.getImage(), image);
+        tv = (TextView) v.findViewById(R.id.adapter_local_music_item_artist);
+        tv.setText(stream.get_artist());
+
+        tv = (TextView) v.findViewById(R.id.adapter_local_music_item_album);
+        tv.setText(stream.get_album());
+/*
+        ImageView image = (ImageView) v.findViewById(R.id.adapter_mymusic_item_image);
+        _imageLoader.displayImage(stream.get_cover(), image);*/
 
         return v;
     }

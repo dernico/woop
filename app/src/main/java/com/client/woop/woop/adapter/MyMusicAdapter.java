@@ -36,6 +36,11 @@ public class MyMusicAdapter extends ArrayAdapter<MyMusicModel> {
     }
 
     @Override
+    public int getCount() {
+        return _mymusic.size();
+    }
+
+    @Override
     public View getView(final int position, View convertView, ViewGroup parent){
         View v = convertView;
         if(v == null){

@@ -5,11 +5,15 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -50,14 +54,50 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
             conn.setDoInput(true);
 
             if(_options.type == HttpRequestType.POST.toString()) {
-                OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
+                conn.setDoOutput(true);
+                if(_options.getFile() != null){
 
-                writer.write(getQuery(_options.postData));
-                writer.flush();
-                writer.close();
-                os.close();
+                    //conn.setRequestProperty("Connection", "Keep-Alive");
+                    //conn.setRequestProperty("Cache-Control", "no-cache");
+                    conn.setRequestProperty(
+                            "Content-Type", "multipart/form-data;boundary=" + _options.getBoundary());
+
+
+                    DataOutputStream request = new DataOutputStream(
+                            conn.getOutputStream());
+
+                    request.writeBytes(_options.twoHyphens + _options.getBoundary() + _options.crlf);
+                    request.writeBytes("Content-Disposition: form-data; name=\"" +
+                            _options.getFilename() + "\";filename=\"" +
+                            _options.getFile().getName() + "\"" + _options.crlf);
+                    request.writeBytes(_options.crlf);
+
+                    request.writeBytes("--" + _options.getBoundary() + "--");
+
+                    FileInputStream inputStream = new FileInputStream(_options.getFile());
+                    byte[] buffer = new byte[4096];
+                    int bytesRead = -1;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        request.write(buffer, 0, bytesRead);
+                    }
+                    request.writeBytes(_options.crlf);
+
+                    request.writeBytes("--" + _options.getBoundary() + "--");
+
+                    request.flush();
+                    inputStream.close();
+
+
+                }else {
+                    OutputStream os = conn.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os, "UTF-8"));
+
+                    writer.write(getQuery(_options.postData));
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                }
             }
 
             // Starts the query

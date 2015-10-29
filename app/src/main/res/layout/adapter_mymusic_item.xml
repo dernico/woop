@@ -25,6 +25,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text=""
         android:layout_toRightOf="@+id/adapter_mymusic_item_image"/>
+
     <TextView
         android:id="@+id/adapter_mymusic_item_album"
         android:layout_width="wrap_content"

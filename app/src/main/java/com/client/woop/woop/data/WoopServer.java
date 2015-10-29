@@ -5,6 +5,7 @@ import com.client.woop.woop.Logger;
 import com.client.woop.woop.data.interfaces.IClientDataStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
+import com.client.woop.woop.models.LocalMusicModel;
 import com.client.woop.woop.models.MyMusicModel;
 import com.client.woop.woop.models.PlayingInfo;
 import com.client.woop.woop.models.StreamModel;
@@ -13,11 +14,14 @@ import com.client.woop.woop.web.HttpOptions;
 import com.client.woop.woop.web.HttpRequest;
 import com.client.woop.woop.web.HttpRequestType;
 import com.client.woop.woop.web.JSONDownloader;
+import com.client.woop.woop.web.MultipartUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -153,6 +157,36 @@ public class WoopServer implements IWoopServer {
     @Override
     public void play(MyMusicModel model, WoopDataReceived<PlayingInfo> callback) {
         this.playControlCall("/api/music/play?id=" + model.get_id(), callback);
+    }
+
+    @Override
+    public void play(LocalMusicModel model, final WoopDataReceived<PlayingInfo> callback) {
+
+        HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/upload", HttpRequestType.POST);
+        File file = new File(model.get_uri());
+        options.setFile("nexttrack", file);
+        /*new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
+            @Override
+            public void completionCallBack(HttpOptions options, String result) {
+                String test = result;
+            }
+
+            @Override
+            public void errorCallBack(HttpOptions options) {
+                callback.errorReceived(options.getError());
+            }
+        }).execute();*/
+
+        try {
+            MultipartUtility up = new MultipartUtility(options.url, "UTF-8");
+            up.addFilePart("nexttrack", file);
+            up.execute();
+            String test = "";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //this.playControlCall("/api/music/play?id=" + model.get_id(), callback);
     }
 
     @Override
