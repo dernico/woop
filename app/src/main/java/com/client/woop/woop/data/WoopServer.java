@@ -6,7 +6,7 @@ import com.client.woop.woop.data.interfaces.IClientDataStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.models.LocalMusicModel;
-import com.client.woop.woop.models.MyMusicModel;
+import com.client.woop.woop.models.ServerMusicModel;
 import com.client.woop.woop.models.PlayingInfoModel;
 import com.client.woop.woop.models.StreamModel;
 import com.client.woop.woop.models.TuneInModel;
@@ -154,7 +154,7 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public void play(MyMusicModel model, WoopDataReceived<PlayingInfoModel> callback) {
+    public void play(ServerMusicModel model, WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/play?id=" + model.get_id(), callback);
     }
 
@@ -214,7 +214,7 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public void getMyMusic(final WoopDataReceived<List<MyMusicModel>> callback) {
+    public void getMyMusic(final WoopDataReceived<List<ServerMusicModel>> callback) {
         HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/listcomplete");
         new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
@@ -222,9 +222,9 @@ public class WoopServer implements IWoopServer {
                 try {
                     int count = json.getInt("count");
                     JSONArray liste = json.getJSONArray("list");
-                    List<MyMusicModel> mymusic = new ArrayList<>();
+                    List<ServerMusicModel> mymusic = new ArrayList<>();
                     for(int i = 0; i < liste.length(); i++){
-                        mymusic.add(MyMusicModel.create(liste.getJSONObject(i)));
+                        mymusic.add(ServerMusicModel.create(liste.getJSONObject(i)));
                     }
                     callback.dataReceived(mymusic);
                 } catch (JSONException e) {

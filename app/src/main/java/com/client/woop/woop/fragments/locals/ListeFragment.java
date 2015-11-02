@@ -1,7 +1,5 @@
 package com.client.woop.woop.fragments.locals;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTabHost;
@@ -10,10 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.client.woop.woop.R;
-import com.client.woop.woop.controller.StreamsController;
 import com.client.woop.woop.fragments.BaseFragment;
-import com.client.woop.woop.fragments.streams.SavedStreamsFragment;
-import com.client.woop.woop.fragments.streams.SearchStreamsFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +56,7 @@ public class ListeFragment extends BaseFragment {
 
         tabHost.addTab(
                 tabHost.newTabSpec(getString(R.string.liste_tabs_mymusic)).setIndicator(getString(R.string.liste_tabs_mymusic), null),
-                MyMusicFragment.class, null);
+                ServerMusicFragment.class, null);
 
         tabHost.addTab(
                 tabHost.newTabSpec(getString(R.string.liste_tabs_local)).setIndicator(getString(R.string.liste_tabs_local), null),

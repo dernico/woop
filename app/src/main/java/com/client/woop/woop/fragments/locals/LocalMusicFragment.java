@@ -1,6 +1,5 @@
 package com.client.woop.woop.fragments.locals;
 
-
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import com.client.woop.woop.R;
 import com.client.woop.woop.adapter.LocalMusicAdapter;
 import com.client.woop.woop.controller.LocalMusicController;
 import com.client.woop.woop.data.LocalMusicData;
-import com.client.woop.woop.data.interfaces.ILocalMusicData;
 import com.client.woop.woop.fragments.BaseFragment;
 import com.client.woop.woop.fragments.interfaces.ILocalMusicView;
 import com.client.woop.woop.models.LocalMusicModel;
@@ -25,11 +23,10 @@ import java.util.List;
  * Use the {@link LocalMusicFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LocalMusicFragment extends BaseFragment implements ILocalMusicView{
+public class LocalMusicFragment extends BaseFragment implements ILocalMusicView {
 
     private LocalMusicController _controller;
     private ListView _listview;
-
 
     /**
      * Use this factory method to create a new instance of
@@ -80,5 +77,15 @@ public class LocalMusicFragment extends BaseFragment implements ILocalMusicView{
     @Override
     public void setLocalMusic(List<LocalMusicModel> localMusic) {
         _listview.setAdapter(new LocalMusicAdapter(getActivity(), localMusic));
+    }
+
+    @Override
+    public void showProgress(String title, String message) {
+        super.showProgressbar(title, message);
+    }
+
+    @Override
+    public void hideProgress() {
+        super.hideProgressbar();
     }
 }

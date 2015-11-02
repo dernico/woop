@@ -11,21 +11,21 @@ import android.widget.ListView;
 
 import com.client.woop.woop.R;
 import com.client.woop.woop.adapter.MyMusicAdapter;
-import com.client.woop.woop.controller.MyMusicController;
+import com.client.woop.woop.controller.ServerMusicController;
 import com.client.woop.woop.fragments.BaseFragment;
-import com.client.woop.woop.fragments.interfaces.IMyMusicView;
-import com.client.woop.woop.models.MyMusicModel;
+import com.client.woop.woop.fragments.interfaces.IServerMusicView;
+import com.client.woop.woop.models.ServerMusicModel;
 
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MyMusicFragment#newInstance} factory method to
+ * Use the {@link ServerMusicFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyMusicFragment extends BaseFragment implements IMyMusicView {
+public class ServerMusicFragment extends BaseFragment implements IServerMusicView {
 
-    private MyMusicController _controller;
+    private ServerMusicController _controller;
     private ListView _listview;
 
 
@@ -33,17 +33,17 @@ public class MyMusicFragment extends BaseFragment implements IMyMusicView {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment MyMusicFragment.
+     * @return A new instance of fragment ServerMusicFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MyMusicFragment newInstance(String param1, String param2) {
-        MyMusicFragment fragment = new MyMusicFragment();
+    public static ServerMusicFragment newInstance(String param1, String param2) {
+        ServerMusicFragment fragment = new ServerMusicFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public MyMusicFragment() {
+    public ServerMusicFragment() {
         // Required empty public constructor
     }
 
@@ -60,7 +60,7 @@ public class MyMusicFragment extends BaseFragment implements IMyMusicView {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_my_music, container, false);
 
-        _controller = new MyMusicController(this, woopServer());
+        _controller = new ServerMusicController(this, woopServer());
         _listview = (ListView) v.findViewById(R.id.fragment_mymusic_liste);
         _listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -74,7 +74,7 @@ public class MyMusicFragment extends BaseFragment implements IMyMusicView {
 
 
     @Override
-    public void setListData(List<MyMusicModel> liste) {
+    public void setListData(List<ServerMusicModel> liste) {
         _listview.setAdapter(new MyMusicAdapter(getActivity(), liste));
     }
 }

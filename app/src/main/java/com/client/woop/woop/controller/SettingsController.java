@@ -1,6 +1,6 @@
 package com.client.woop.woop.controller;
 
-import com.client.woop.woop.activitys.interfaces.ISettingsView;
+import com.client.woop.woop.fragments.interfaces.ISettingsView;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.navigation.INavigation;
@@ -19,7 +19,7 @@ public class SettingsController {
     }
 
     public void searchServer(){
-        _view.showProgressBar();
+        _view.showProgressBar("Loading", "Busy finding woop server");
         _woop.findService(new WoopServer.WoopServerListener() {
             @Override
             public void serviceFound() {

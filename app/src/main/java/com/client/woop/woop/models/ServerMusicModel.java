@@ -3,7 +3,7 @@ package com.client.woop.woop.models;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MyMusicModel {
+public class ServerMusicModel {
     private int _id;
     private String _album;
     private boolean _isLocal;
@@ -78,8 +78,8 @@ public class MyMusicModel {
         this._webpath = _webpath;
     }
 
-    public static MyMusicModel create(JSONObject json) throws JSONException {
-        MyMusicModel model = new MyMusicModel();
+    public static ServerMusicModel create(JSONObject json) throws JSONException {
+        ServerMusicModel model = new ServerMusicModel();
 
         model.set_id(json.getInt("id"));
         model.set_album(json.getString("album"));

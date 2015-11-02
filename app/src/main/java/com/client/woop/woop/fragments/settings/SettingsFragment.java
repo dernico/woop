@@ -1,7 +1,6 @@
 package com.client.woop.woop.fragments.settings;
 
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.client.woop.woop.R;
-import com.client.woop.woop.activitys.interfaces.ISettingsView;
+import com.client.woop.woop.fragments.interfaces.ISettingsView;
 import com.client.woop.woop.controller.SettingsController;
 import com.client.woop.woop.fragments.BaseFragment;
 
@@ -21,7 +20,6 @@ import com.client.woop.woop.fragments.BaseFragment;
  */
 public class SettingsFragment extends BaseFragment implements ISettingsView{
 
-    ProgressDialog _progressDialog;
     SettingsController _controller;
 
     /**
@@ -50,7 +48,6 @@ public class SettingsFragment extends BaseFragment implements ISettingsView{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        _progressDialog = new ProgressDialog(getActivity());
         _controller = new SettingsController(this, woopServer(), navigation());
 
         // Inflate the layout for this fragment
@@ -77,14 +74,12 @@ public class SettingsFragment extends BaseFragment implements ISettingsView{
 
 
     @Override
-    public void showProgressBar() {
-        _progressDialog.setTitle("Loading ...");
-        _progressDialog.setMessage("Busy finding woop server");
-        _progressDialog.show();
+    public void showProgressBar(String title, String message) {
+        super.showProgressbar(title, message);
     }
 
     @Override
     public void hideProgressBar() {
-        _progressDialog.dismiss();
+        super.hideProgressbar();
     }
 }

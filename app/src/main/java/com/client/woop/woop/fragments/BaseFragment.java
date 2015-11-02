@@ -18,16 +18,17 @@ public class BaseFragment extends Fragment {
     private INavigation _navigation;
     private IClientDataStorage _storage;
     private IWoopServer _woop;
+    private BaseActivity _parentActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BaseActivity parent = ((BaseActivity) getActivity());
-        _navigation = parent.navigation();
+        _parentActivity = ((BaseActivity) getActivity());
+        _navigation = _parentActivity.navigation();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         _storage = new ClientDataStorage(prefs);
-        _woop = parent.woopServer();
+        _woop = _parentActivity.woopServer();
     }
 
     public IWoopServer woopServer(){
@@ -37,4 +38,12 @@ public class BaseFragment extends Fragment {
     public INavigation navigation(){return _navigation;}
 
     public IClientDataStorage storage(){return _storage;}
+
+    public void showProgressbar(String title, String message){
+        _parentActivity.showProgessbar(title, message);
+    }
+
+    public void hideProgressbar(){
+        _parentActivity.hideProgressBar();
+    }
 }

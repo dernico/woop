@@ -7,7 +7,7 @@
         android:id="@+id/fragment_liste_mymusic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.client.woop.woop.fragments.locals.MyMusicFragment"
+        android:name="com.client.woop.woop.fragments.locals.ServerMusicFragmentment"
         tools:layout="@layout/fragment_my_music"></fragment>-->
 
 

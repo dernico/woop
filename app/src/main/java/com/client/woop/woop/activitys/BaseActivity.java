@@ -1,5 +1,6 @@
 package com.client.woop.woop.activitys;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -31,6 +32,7 @@ public class BaseActivity extends AppCompatActivity
     private String TAG;
 
     private INavigation _navigator;
+    private ProgressDialog _progressDialog;
     private IWoopServer _woop;
 
     protected static ILogger _logger = new Logger();
@@ -48,6 +50,9 @@ public class BaseActivity extends AppCompatActivity
         _logger.debug(TAG, "onCreate was called.");
 
         _navigator = new Navigation(this);
+
+
+        _progressDialog = new ProgressDialog(this);
 
         _google = new GoogleData(this, this);
 
@@ -143,10 +148,18 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-
     @Override
     public void onConnected(Bundle bundle) {
         _logger.info(TAG, "onConnected was not implemented by the child.");
     }
 
+    public void showProgessbar(String title, String message){
+        _progressDialog.setTitle(title);
+        _progressDialog.setMessage(message);
+        _progressDialog.show();
+    }
+
+    public void hideProgressBar() {
+        _progressDialog.dismiss();
+    }
 }

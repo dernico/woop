@@ -27,16 +27,18 @@ public class LocalMusicController {
     }
 
     public void playTrackOnServer(int position){
+        _view.showProgress("Prepare Playing", "Preparing the track to get played ...");
+
         LocalMusicModel model = _localMusic.getLocalMusic().get(position);
         _woop.play(model, new WoopServer.WoopDataReceived<PlayingInfoModel>() {
             @Override
             public void dataReceived(PlayingInfoModel result) {
-
+                _view.hideProgress();
             }
 
             @Override
             public void errorReceived(Exception ex) {
-
+                _view.hideProgress();
             }
         });
     }

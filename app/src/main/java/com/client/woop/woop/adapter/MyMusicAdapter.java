@@ -9,20 +9,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.client.woop.woop.R;
-import com.client.woop.woop.models.MyMusicModel;
-import com.client.woop.woop.models.TuneInModel;
+import com.client.woop.woop.models.ServerMusicModel;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.List;
 
-public class MyMusicAdapter extends ArrayAdapter<MyMusicModel> {
+public class MyMusicAdapter extends ArrayAdapter<ServerMusicModel> {
 
-    private List<MyMusicModel> _mymusic;
+    private List<ServerMusicModel> _mymusic;
     private Context _context;
     private ImageLoader _imageLoader;
 
-    public MyMusicAdapter(Context ctx, List<MyMusicModel> mymusic){
+    public MyMusicAdapter(Context ctx, List<ServerMusicModel> mymusic){
         super(ctx, R.layout.adapter_mymusic_item, mymusic);
 
         _context = ctx;
@@ -48,7 +47,7 @@ public class MyMusicAdapter extends ArrayAdapter<MyMusicModel> {
             v = layout.inflate(R.layout.adapter_mymusic_item ,null);
         }
 
-        MyMusicModel stream = _mymusic.get(position);
+        ServerMusicModel stream = _mymusic.get(position);
 
         TextView tv = (TextView) v.findViewById(R.id.adapter_mymusic_item_title);
         tv.setText(stream.get_title());
