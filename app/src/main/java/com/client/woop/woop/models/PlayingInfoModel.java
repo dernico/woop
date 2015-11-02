@@ -6,7 +6,7 @@ import org.json.JSONObject;
 /**
  * Created by nico on 10/21/2015.
  */
-public class PlayingInfo {
+public class PlayingInfoModel {
     public String Title;
     public String Cover;
     public String Webpath;
@@ -15,8 +15,8 @@ public class PlayingInfo {
     public boolean IsRandom;
     public boolean IsPlaying;
 
-    public static PlayingInfo createFromJson(JSONObject json) {
-        PlayingInfo info = new PlayingInfo();
+    public static PlayingInfoModel createFromJson(JSONObject json) {
+        PlayingInfoModel info = new PlayingInfoModel();
         info.Title = null;
         info.Cover = null;
         info.Webpath = null;

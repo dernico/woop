@@ -7,21 +7,20 @@ import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.models.LocalMusicModel;
 import com.client.woop.woop.models.MyMusicModel;
-import com.client.woop.woop.models.PlayingInfo;
+import com.client.woop.woop.models.PlayingInfoModel;
 import com.client.woop.woop.models.StreamModel;
 import com.client.woop.woop.models.TuneInModel;
 import com.client.woop.woop.web.HttpOptions;
 import com.client.woop.woop.web.HttpRequest;
 import com.client.woop.woop.web.HttpRequestType;
 import com.client.woop.woop.web.JSONDownloader;
-import com.client.woop.woop.web.MultipartUtility;
+import com.client.woop.woop.web.FileUploader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class WoopServer implements IWoopServer {
 
     private IClientDataStorage _storage;
     private IDeviceData _deviceData;
-    private PlayingInfo _currentPlayinginfo;
+    private PlayingInfoModel _currentPlayinginfo;
     private WoopInfoChanged _infoChangedCallback;
 
     public interface WoopServerListener{
@@ -53,7 +52,7 @@ public class WoopServer implements IWoopServer {
     }
 
     public interface WoopInfoChanged{
-        void infoChanged(PlayingInfo info);
+        void infoChanged(PlayingInfoModel info);
     }
 
     private WoopServer(IClientDataStorage storage, IDeviceData deviceData){
@@ -121,7 +120,7 @@ public class WoopServer implements IWoopServer {
     public void subscribePlayingInfoChanged(WoopInfoChanged callback) {
         _infoChangedCallback = callback;
         if(callback != null){
-            PlayingInfo info = currentPlayingInfo();
+            PlayingInfoModel info = currentPlayingInfo();
             if(info != null) {
                 _infoChangedCallback.infoChanged(info);
             }
@@ -129,7 +128,7 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public PlayingInfo currentPlayingInfo() {
+    public PlayingInfoModel currentPlayingInfo() {
         if(_currentPlayinginfo == null){
             this.callinfo();
         }
@@ -150,72 +149,67 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public void play(final WoopServer.WoopDataReceived<PlayingInfo> callback) {
+    public void play(final WoopServer.WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/play", callback);
     }
 
     @Override
-    public void play(MyMusicModel model, WoopDataReceived<PlayingInfo> callback) {
+    public void play(MyMusicModel model, WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/play?id=" + model.get_id(), callback);
     }
 
     @Override
-    public void play(LocalMusicModel model, final WoopDataReceived<PlayingInfo> callback) {
+    public void play(LocalMusicModel model, final WoopDataReceived<PlayingInfoModel> callback) {
 
-        HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/upload", HttpRequestType.POST);
+        String url = _serviceHostAdress + "/api/music/upload";
         File file = new File(model.get_uri());
-        options.setFile("nexttrack", file);
-        /*new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
+
+        new FileUploader(url, "nexttrack", file, new FileUploader.FileUploadListener() {
             @Override
-            public void completionCallBack(HttpOptions options, String result) {
-                String test = result;
+            public void fileUploaded(String result) {
+                try {
+                    PlayingInfoModel info = PlayingInfoModel.createFromJson(new JSONObject(result));
+                    setPlayingInfo(info);
+                    callback.dataReceived(info);
+                } catch (JSONException e) {
+                    callback.errorReceived(e);
+                }
             }
 
             @Override
-            public void errorCallBack(HttpOptions options) {
-                callback.errorReceived(options.getError());
+            public void uploadFailed(Exception ex) {
+                callback.errorReceived(ex);
             }
-        }).execute();*/
-
-        try {
-            MultipartUtility up = new MultipartUtility(options.url, "UTF-8");
-            up.addFilePart("nexttrack", file);
-            up.execute();
-            String test = "";
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //this.playControlCall("/api/music/play?id=" + model.get_id(), callback);
+        }).execute();
     }
 
     @Override
-    public void pause(WoopDataReceived<PlayingInfo> callback) {
+    public void pause(WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/pause", callback);
     }
 
     @Override
-    public void prev(WoopDataReceived<PlayingInfo> callback) {
+    public void prev(WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/prev", callback);
     }
 
     @Override
-    public void next(WoopDataReceived<PlayingInfo> callback) {
+    public void next(WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/next", callback);
     }
 
     @Override
-    public void shuffle(WoopDataReceived<PlayingInfo> callback) {
+    public void shuffle(WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/toggleRandom", callback);
     }
 
     @Override
-    public void volumeUp(WoopDataReceived<PlayingInfo> callback) {
+    public void volumeUp(WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/volumeUp", callback);
     }
 
     @Override
-    public void volumeDown(WoopDataReceived<PlayingInfo> callback) {
+    public void volumeDown(WoopDataReceived<PlayingInfoModel> callback) {
         this.playControlCall("/api/music/volumeDown", callback);
     }
 
@@ -272,7 +266,7 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public void playSavedStream(StreamModel stream, final WoopDataReceived<PlayingInfo> callback) {
+    public void playSavedStream(StreamModel stream, final WoopDataReceived<PlayingInfoModel> callback) {
         HttpOptions options = new HttpOptions(
                 _serviceHostAdress + "/api/music/playStream",
                 HttpRequestType.POST);
@@ -284,7 +278,7 @@ public class WoopServer implements IWoopServer {
             @Override
             public void jsonComplete(JSONObject json) {
 
-                setPlayingInfo(PlayingInfo.createFromJson(json));
+                setPlayingInfo(PlayingInfoModel.createFromJson(json));
                 callback.dataReceived(_currentPlayinginfo);
             }
 
@@ -333,13 +327,13 @@ public class WoopServer implements IWoopServer {
     //private functions
 
 
-    private void playControlCall(String apiPart, final WoopDataReceived<PlayingInfo> callback){
+    private void playControlCall(String apiPart, final WoopDataReceived<PlayingInfoModel> callback){
 
         HttpOptions options = new HttpOptions(_serviceHostAdress + apiPart);
         new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
             public void jsonComplete(JSONObject json) {
-                setPlayingInfo(PlayingInfo.createFromJson(json));
+                setPlayingInfo(PlayingInfoModel.createFromJson(json));
                 if(callback != null){
                     callback.dataReceived(_currentPlayinginfo);
                 }
@@ -354,7 +348,7 @@ public class WoopServer implements IWoopServer {
         }).execute();
     }
 
-    private void setPlayingInfo(PlayingInfo info){
+    private void setPlayingInfo(PlayingInfoModel info){
         _currentPlayinginfo = info;
         if(_infoChangedCallback != null){
             _infoChangedCallback.infoChanged(info);

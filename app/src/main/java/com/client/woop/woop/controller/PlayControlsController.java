@@ -3,11 +3,11 @@ package com.client.woop.woop.controller;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.fragments.interfaces.IPlayControlsView;
-import com.client.woop.woop.models.PlayingInfo;
+import com.client.woop.woop.models.PlayingInfoModel;
 
 
 public class PlayControlsController implements
-        WoopServer.WoopDataReceived<PlayingInfo> ,
+        WoopServer.WoopDataReceived<PlayingInfoModel> ,
         WoopServer.WoopInfoChanged
 {
 
@@ -49,12 +49,12 @@ public class PlayControlsController implements
         _woop.volumeDown(this);
     }
 
-    private void setInfoStates(PlayingInfo info){
+    private void setInfoStates(PlayingInfoModel info){
         this.setPlayState(info);
         _view.setVolume("" + info.Volume);
     }
 
-    private void setPlayState(PlayingInfo info){
+    private void setPlayState(PlayingInfoModel info){
         if(info == null){ return; }
 
         if(info.IsPlaying){
@@ -66,9 +66,9 @@ public class PlayControlsController implements
     }
 
     @Override
-    public void dataReceived(PlayingInfo result) {
+    public void dataReceived(PlayingInfoModel result) {
         // Nothing needs to be done here,
-        // cause the infoChanged also gets the current PlayingInfo
+        // cause the infoChanged also gets the current PlayingInfoModel
 
         //this.setInfoStates(result);
     }
@@ -79,7 +79,7 @@ public class PlayControlsController implements
     }
 
     @Override
-    public void infoChanged(PlayingInfo info) {
+    public void infoChanged(PlayingInfoModel info) {
         this.setInfoStates(info);
     }
 

@@ -5,7 +5,7 @@ import com.client.woop.woop.data.interfaces.ILocalMusicData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.fragments.interfaces.ILocalMusicView;
 import com.client.woop.woop.models.LocalMusicModel;
-import com.client.woop.woop.models.PlayingInfo;
+import com.client.woop.woop.models.PlayingInfoModel;
 
 import java.util.List;
 
@@ -28,9 +28,9 @@ public class LocalMusicController {
 
     public void playTrackOnServer(int position){
         LocalMusicModel model = _localMusic.getLocalMusic().get(position);
-        _woop.play(model, new WoopServer.WoopDataReceived<PlayingInfo>() {
+        _woop.play(model, new WoopServer.WoopDataReceived<PlayingInfoModel>() {
             @Override
-            public void dataReceived(PlayingInfo result) {
+            public void dataReceived(PlayingInfoModel result) {
 
             }
 

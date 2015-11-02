@@ -3,7 +3,7 @@ package com.client.woop.woop.controller;
 import com.client.woop.woop.fragments.interfaces.ISavedStreamsView;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
-import com.client.woop.woop.models.PlayingInfo;
+import com.client.woop.woop.models.PlayingInfoModel;
 import com.client.woop.woop.models.StreamModel;
 
 import java.util.List;
@@ -41,9 +41,9 @@ public class SavedStreamsController {
 
     public void playStream(int position){
         StreamModel model = _savedStreams.get(position);
-        _woop.playSavedStream(model, new WoopServer.WoopDataReceived<PlayingInfo>() {
+        _woop.playSavedStream(model, new WoopServer.WoopDataReceived<PlayingInfoModel>() {
             @Override
-            public void dataReceived(PlayingInfo result) {
+            public void dataReceived(PlayingInfoModel result) {
                 //TODO: do something with the result
             }
 

@@ -4,6 +4,7 @@ import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.fragments.interfaces.IMyMusicView;
 import com.client.woop.woop.models.MyMusicModel;
+import com.client.woop.woop.models.PlayingInfoModel;
 
 import java.util.List;
 
@@ -36,7 +37,17 @@ public class MyMusicController {
 
     public void play(int position){
         MyMusicModel model = _mymusic.get(position);
-        _woop.play(model, null);
+        _woop.play(model, new WoopServer.WoopDataReceived<PlayingInfoModel>() {
+            @Override
+            public void dataReceived(PlayingInfoModel result) {
+
+            }
+
+            @Override
+            public void errorReceived(Exception ex) {
+                //TODO: handle error properly
+            }
+        });
     }
 
 }
