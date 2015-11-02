@@ -74,7 +74,15 @@ public class BaseActivity extends AppCompatActivity
 
     public IWoopServer woopServer(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        return WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
+        WoopServer woop = WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
+        woop.setServerAvailableCallback(new WoopServer.ServerAvailable() {
+            @Override
+            public void serverAvailable(boolean available) {
+                setServerOnlineStatus(available);
+            }
+        });
+        woop.checkIfServerIsOnline();
+        return woop;
     }
 
     @Override
@@ -106,6 +114,19 @@ public class BaseActivity extends AppCompatActivity
     public void onDestroy(){
         super.onDestroy();
         _logger.debug(TAG, "onDestroy was called.");
+    }
+
+    private void setServerOnlineStatus(boolean status){
+        if (_menu == null) return;
+
+        MenuItem item = _menu.findItem(R.id.action_server_status);
+        if(item != null){
+            if(status){
+                item.setIcon(this.getDrawable(R.mipmap.online));
+            }else{
+                item.setIcon(this.getDrawable(R.mipmap.offline));
+            }
+        }
     }
 
     private void setGoogleImageIcon(Person person){

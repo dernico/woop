@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class WoopServer implements IWoopServer {
     private IDeviceData _deviceData;
     private PlayingInfoModel _currentPlayinginfo;
     private WoopInfoChanged _infoChangedCallback;
+    private ServerAvailable _serverAvailableCallback;
 
     public interface WoopServerListener{
         void serviceFound();
@@ -49,6 +51,10 @@ public class WoopServer implements IWoopServer {
     public interface WoopDataReceived<T>{
         void dataReceived(T result);
         void errorReceived(Exception ex);
+    }
+
+    public interface ServerAvailable{
+        void serverAvailable(boolean available);
     }
 
     public interface WoopInfoChanged{
@@ -75,6 +81,24 @@ public class WoopServer implements IWoopServer {
             return false;
         }
         return true;
+    }
+
+    public void setServerAvailableCallback(ServerAvailable callback){
+        _serverAvailableCallback = callback;
+    }
+
+    public void checkIfServerIsOnline(){
+        new HttpRequest(new HttpOptions(_serviceHostAdress), new HttpRequest.DownloadCompleteListener() {
+            @Override
+            public void completionCallBack(HttpOptions options, String result) {
+                _serverAvailableCallback.serverAvailable(result != null);
+            }
+
+            @Override
+            public void errorCallBack(HttpOptions options) {
+                _serverAvailableCallback.serverAvailable(false);
+            }
+        }).execute();
     }
 
     @Override
@@ -268,6 +292,8 @@ public class WoopServer implements IWoopServer {
 
             @Override
             public void errorOccured(Exception ex) {
+
+                setServerAvailableStatus(false);
                 callback.errorReceived(ex);
             }
         }).execute();
@@ -294,6 +320,7 @@ public class WoopServer implements IWoopServer {
 
             @Override
             public void errorOccured(Exception ex) {
+                setServerAvailableStatus(false);
                 result.errorReceived(ex);
             }
         }).execute();
@@ -318,6 +345,7 @@ public class WoopServer implements IWoopServer {
 
             @Override
             public void errorOccured(Exception ex) {
+                setServerAvailableStatus(false);
                 callback.errorReceived(ex);
             }
         }).execute();
@@ -348,6 +376,7 @@ public class WoopServer implements IWoopServer {
                     }
                     callback.dataReceived(streams);
                 } catch (JSONException e) {
+                    setServerAvailableStatus(false);
                     callback.errorReceived(e);
                 }
             }
@@ -386,13 +415,13 @@ public class WoopServer implements IWoopServer {
 
             @Override
             public void errorOccured(Exception ex) {
+                setServerAvailableStatus(false);
                 callback.errorReceived(ex);
             }
         }).execute();
     }
 
     //private functions
-
 
     private void playControlCall(String apiPart, final WoopDataReceived<PlayingInfoModel> callback){
 
@@ -408,11 +437,18 @@ public class WoopServer implements IWoopServer {
 
             @Override
             public void errorOccured(Exception ex) {
+                setServerAvailableStatus(false);
                 if(callback != null) {
                     callback.errorReceived(ex);
                 }
             }
         }).execute();
+    }
+
+    private void setServerAvailableStatus(boolean status){
+        if(_serverAvailableCallback != null) {
+            _serverAvailableCallback.serverAvailable(status);
+        }
     }
 
     private void setPlayingInfo(PlayingInfoModel info){

@@ -8,4 +8,10 @@
         android:icon="@mipmap/ic_launcher"
         app:showAsAction="always" android:enabled="false"></item>
 
+    <item android:id="@+id/action_server_status"
+        android:title=""
+        android:icon="@mipmap/online"
+        app:showAsAction="always" android:enabled="false"
+        ></item>
+
 </menu>

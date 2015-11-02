@@ -55,49 +55,15 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
 
             if(_options.type == HttpRequestType.POST.toString()) {
                 conn.setDoOutput(true);
-                if(_options.getFile() != null){
 
-                    //conn.setRequestProperty("Connection", "Keep-Alive");
-                    //conn.setRequestProperty("Cache-Control", "no-cache");
-                    conn.setRequestProperty(
-                            "Content-Type", "multipart/form-data;boundary=" + _options.getBoundary());
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
 
-
-                    DataOutputStream request = new DataOutputStream(
-                            conn.getOutputStream());
-
-                    request.writeBytes(_options.twoHyphens + _options.getBoundary() + _options.crlf);
-                    request.writeBytes("Content-Disposition: form-data; name=\"" +
-                            _options.getFilename() + "\";filename=\"" +
-                            _options.getFile().getName() + "\"" + _options.crlf);
-                    request.writeBytes(_options.crlf);
-
-                    request.writeBytes("--" + _options.getBoundary() + "--");
-
-                    FileInputStream inputStream = new FileInputStream(_options.getFile());
-                    byte[] buffer = new byte[4096];
-                    int bytesRead = -1;
-                    while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        request.write(buffer, 0, bytesRead);
-                    }
-                    request.writeBytes(_options.crlf);
-
-                    request.writeBytes("--" + _options.getBoundary() + "--");
-
-                    request.flush();
-                    inputStream.close();
-
-
-                }else {
-                    OutputStream os = conn.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(os, "UTF-8"));
-
-                    writer.write(getQuery(_options.postData));
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                }
+                writer.write(getQuery(_options.postData));
+                writer.flush();
+                writer.close();
+                os.close();
             }
 
             // Starts the query
