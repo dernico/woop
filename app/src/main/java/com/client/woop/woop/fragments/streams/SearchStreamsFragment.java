@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -56,6 +57,13 @@ public class SearchStreamsFragment extends BaseFragment implements ISearchStream
             }
         });
 
+        _listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                _controller.play(position);
+            }
+        });
+
         _controller = new SearchStreamsController(this, woopServer());
 
         return v;
@@ -74,5 +82,15 @@ public class SearchStreamsFragment extends BaseFragment implements ISearchStream
     @Override
     public void showToast(String msg) {
         Toast.makeText(getActivity(),msg, Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showProgress(String title, String message) {
+        super.showProgressbar(title, message);
+    }
+
+    @Override
+    public void hideProgress() {
+        super.hideProgressbar();
     }
 }

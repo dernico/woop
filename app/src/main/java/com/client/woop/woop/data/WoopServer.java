@@ -324,7 +324,7 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public void searchStream(String query, final WoopDataReceived<List<TuneInModel>> callback) {
+    public void searchTuneInStream(String query, final WoopDataReceived<List<TuneInModel>> callback) {
         try {
             query = URLEncoder.encode(query, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -332,7 +332,8 @@ public class WoopServer implements IWoopServer {
         }
 
         HttpOptions options = new HttpOptions(
-                _serviceHostAdress + "/api/tunein/search?search="+query
+                _serviceHostAdress + "/api/tunein/search?search="+query,
+                10000 // wait ten seconds, you never know :)
         );
 
         new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
@@ -354,6 +355,38 @@ public class WoopServer implements IWoopServer {
             @Override
             public void errorCallBack(HttpOptions options) {
                 callback.errorReceived(options.getError());
+            }
+        }).execute();
+    }
+
+    @Override
+    public void playTuneInStream(TuneInModel model, final WoopDataReceived<PlayingInfoModel> callback) {
+        HttpOptions options = new HttpOptions(
+                _serviceHostAdress + "/api/tunein/play",
+                HttpRequestType.POST
+        );
+        try {
+
+            HashMap<String, String> data = new HashMap<>();
+            data.put("item", model.toJSONString());
+            options.setPostData(data);
+
+        } catch (JSONException e) {
+            callback.errorReceived(e);
+            return;
+        }
+
+        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(JSONObject json) {
+                PlayingInfoModel info = PlayingInfoModel.createFromJson(json);
+                setPlayingInfo(info);
+                callback.dataReceived(info);
+            }
+
+            @Override
+            public void errorOccured(Exception ex) {
+                callback.errorReceived(ex);
             }
         }).execute();
     }

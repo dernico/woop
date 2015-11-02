@@ -36,5 +36,6 @@ public interface IWoopServer {
     void getSavedStreams(WoopServer.WoopDataReceived<List<StreamModel>> result);
     void playSavedStream(StreamModel stream, WoopServer.WoopDataReceived<PlayingInfoModel> callback);
 
-    void searchStream(String query, WoopServer.WoopDataReceived<List<TuneInModel>> callback);
+    void searchTuneInStream(String query, WoopServer.WoopDataReceived<List<TuneInModel>> callback);
+    void playTuneInStream(TuneInModel model, WoopServer.WoopDataReceived<PlayingInfoModel> callback);
 }

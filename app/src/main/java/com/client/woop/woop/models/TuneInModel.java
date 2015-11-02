@@ -50,4 +50,13 @@ public class TuneInModel {
         model._stream = json.getString("stream");
         return model;
     }
+
+    public String toJSONString() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("id", _id);
+        json.put("image", _image);
+        json.put("name", _name);
+        json.put("stream", _stream);
+        return json.toString();
+    }
 }

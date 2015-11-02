@@ -9,4 +9,6 @@ public interface ISearchStreamsView {
     String getSearchString();
     void setSearchResult(List<TuneInModel> result);
     void showToast(String msg);
+    void showProgress(String title, String message);
+    void hideProgress();
 }
