@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.client.woop.woop.R;
 import com.client.woop.woop.activitys.LoginActivity;
 import com.client.woop.woop.activitys.MainActivity;
-import com.client.woop.woop.fragments.locals.ListeFragment;
+import com.client.woop.woop.fragments.mymusic.ListeFragment;
 import com.client.woop.woop.fragments.settings.SettingsFragment;
 import com.client.woop.woop.fragments.streams.StreamsFragment;
 import com.client.woop.woop.fragments.youtube.YouTubeFragment;

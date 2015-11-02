@@ -48,7 +48,6 @@ public class SettingsFragment extends BaseFragment implements ISettingsView{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        _controller = new SettingsController(this, woopServer(), navigation());
 
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_settings, container, false);
@@ -68,6 +67,8 @@ public class SettingsFragment extends BaseFragment implements ISettingsView{
                 _controller.resetServer();
             }
         });
+
+        _controller = new SettingsController(this, woopServer(), navigation());
 
         return v;
     }

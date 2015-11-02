@@ -33,7 +33,6 @@ public class SavedStreamsFragment extends BaseFragment implements ISavedStreamsV
 
         View v = inflater.inflate(R.layout.fragment_streams_saved, container, false);
 
-        _controller = new SavedStreamsController(this, woopServer());
 
         _listView = (ListView) v.findViewById(R.id.fragment_saved_streams_listview);
         _listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -43,6 +42,7 @@ public class SavedStreamsFragment extends BaseFragment implements ISavedStreamsV
             }
         });
 
+        _controller = new SavedStreamsController(this, woopServer());
         _controller.loadStreams();
         return v;
     }

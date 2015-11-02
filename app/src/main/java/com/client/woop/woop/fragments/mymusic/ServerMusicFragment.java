@@ -1,4 +1,4 @@
-package com.client.woop.woop.fragments.locals;
+package com.client.woop.woop.fragments.mymusic;
 
 
 import android.os.Bundle;
@@ -60,7 +60,6 @@ public class ServerMusicFragment extends BaseFragment implements IServerMusicVie
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_my_music, container, false);
 
-        _controller = new ServerMusicController(this, woopServer());
         _listview = (ListView) v.findViewById(R.id.fragment_mymusic_liste);
         _listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -68,6 +67,9 @@ public class ServerMusicFragment extends BaseFragment implements IServerMusicVie
                 _controller.play(position);
             }
         });
+
+
+        _controller = new ServerMusicController(this, woopServer());
 
         return v;
     }

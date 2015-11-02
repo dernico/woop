@@ -44,7 +44,6 @@ public class SearchStreamsFragment extends BaseFragment implements ISearchStream
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_streams_search, container, false);
 
-        _controller = new SearchStreamsController(this, woopServer());
 
         _listview = (ListView) v.findViewById(R.id.fragment_streams_search_results);
         _text = (EditText) v.findViewById(R.id.fragment_streams_search_query);
@@ -56,6 +55,8 @@ public class SearchStreamsFragment extends BaseFragment implements ISearchStream
                 _controller.search();
             }
         });
+
+        _controller = new SearchStreamsController(this, woopServer());
 
         return v;
     }

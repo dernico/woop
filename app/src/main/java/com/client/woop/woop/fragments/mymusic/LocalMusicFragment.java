@@ -1,4 +1,4 @@
-package com.client.woop.woop.fragments.locals;
+package com.client.woop.woop.fragments.mymusic;
 
 import android.os.Bundle;
 import android.app.Fragment;

@@ -4,7 +4,6 @@ import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.fragments.interfaces.IServerMusicView;
 import com.client.woop.woop.models.ServerMusicModel;
-import com.client.woop.woop.models.PlayingInfoModel;
 
 import java.util.List;
 
@@ -17,10 +16,10 @@ public class ServerMusicController {
     public ServerMusicController(IServerMusicView view, IWoopServer woop){
         _view = view;
         _woop = woop;
-        loadMyMusic();
+        loadServerMusic();
     }
 
-    private void loadMyMusic(){
+    private void loadServerMusic(){
         _woop.getMyMusic(new WoopServer.WoopDataReceived<List<ServerMusicModel>>() {
             @Override
             public void dataReceived(List<ServerMusicModel> result) {

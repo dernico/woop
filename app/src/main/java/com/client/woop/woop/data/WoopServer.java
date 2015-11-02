@@ -161,8 +161,42 @@ public class WoopServer implements IWoopServer {
     @Override
     public void play(LocalMusicModel model, final WoopDataReceived<PlayingInfoModel> callback) {
 
+        final File file = new File(model.get_uri());
+
+        String filename = file.getName();
+        try {
+            filename = URLEncoder.encode(filename, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            //Don't know why, but try the search without urlencoder
+        }
+
+        String url = _serviceHostAdress + "/api/music/checkandplay?filename=" + filename;
+        HttpOptions options = new HttpOptions(url);
+        new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
+            @Override
+            public void completionCallBack(HttpOptions options, String result) {
+                if(result.compareTo("false") == 0){
+                    UploadFile(file, callback);
+                }else{
+                    try {
+                        PlayingInfoModel info = PlayingInfoModel.createFromJson(new JSONObject(result));
+                        setPlayingInfo(info);
+                        callback.dataReceived(info);
+                    } catch (JSONException e) {
+                        callback.errorReceived(e);
+                    }
+                }
+            }
+
+            @Override
+            public void errorCallBack(HttpOptions options) {
+                callback.errorReceived(options.getError());
+            }
+        }).execute();
+    }
+
+    private void UploadFile(File file, final WoopDataReceived<PlayingInfoModel> callback) {
         String url = _serviceHostAdress + "/api/music/upload";
-        File file = new File(model.get_uri());
 
         new FileUploader(url, "nexttrack", file, new FileUploader.FileUploadListener() {
             @Override

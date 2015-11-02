@@ -33,7 +33,6 @@ public class BaseActivity extends AppCompatActivity
 
     private INavigation _navigator;
     private ProgressDialog _progressDialog;
-    private IWoopServer _woop;
 
     protected static ILogger _logger = new Logger();
     protected Menu _menu;
@@ -56,8 +55,6 @@ public class BaseActivity extends AppCompatActivity
 
         _google = new GoogleData(this, this);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        _woop = WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
 
     }
 
@@ -76,7 +73,8 @@ public class BaseActivity extends AppCompatActivity
     }
 
     public IWoopServer woopServer(){
-        return _woop;
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        return WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
     }
 
     @Override
