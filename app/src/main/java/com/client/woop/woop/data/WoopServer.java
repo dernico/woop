@@ -41,7 +41,7 @@ public class WoopServer implements IWoopServer {
     private IClientDataStorage _storage;
     private IDeviceData _deviceData;
     private PlayingInfoModel _currentPlayinginfo;
-    private WoopInfoChanged _infoChangedCallback;
+    private HashMap<String, WoopInfoChanged> _infoChangedCallbacks;
     private ServerAvailable _serverAvailableCallback;
 
     public interface WoopServerListener{
@@ -65,6 +65,7 @@ public class WoopServer implements IWoopServer {
         _storage = storage;
         _deviceData = deviceData;
         _serviceHostAdress = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
+        _infoChangedCallbacks = new HashMap<>();
     }
 
     public static WoopServer singelton(IClientDataStorage storage, IDeviceData deviceData){
@@ -142,12 +143,22 @@ public class WoopServer implements IWoopServer {
 
     @Override
     public void subscribePlayingInfoChanged(WoopInfoChanged callback) {
-        _infoChangedCallback = callback;
+        if(_infoChangedCallbacks.containsKey(callback.getClass().getName())){
+            _infoChangedCallbacks.remove(callback.getClass().getName());
+        }
+        _infoChangedCallbacks.put(callback.getClass().getName(), callback);
+
         if(callback != null){
             PlayingInfoModel info = currentPlayingInfo();
             if(info != null) {
-                _infoChangedCallback.infoChanged(info);
+                callInfoChangeListener(info);
             }
+        }
+    }
+
+    private void callInfoChangeListener(PlayingInfoModel info){
+        for(WoopInfoChanged callback : _infoChangedCallbacks.values()){
+            callback.infoChanged(info);
         }
     }
 
@@ -453,8 +464,8 @@ public class WoopServer implements IWoopServer {
 
     private void setPlayingInfo(PlayingInfoModel info){
         _currentPlayinginfo = info;
-        if(_infoChangedCallback != null){
-            _infoChangedCallback.infoChanged(info);
+        if(_infoChangedCallbacks != null && _infoChangedCallbacks.size() > 0){
+            callInfoChangeListener(info);
         }
     }
 }

@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.client.woop.woop.fragments.PlayingInfoFragment">
+
+
+    <ImageView
+        android:id="@+id/fragment_playing_info_cover"
+        android:layout_width="@dimen/cover_image_size_small"
+        android:layout_height="@dimen/cover_image_size_small" />
+    
+    <TextView
+        android:id="@+id/fragment_playing_info_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/cover_image_size_small"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@+id/fragment_playing_info_cover"
+         />
+
+</RelativeLayout>

@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/cover_image_size"
+        android:layout_height="@dimen/cover_image_size"
         android:id="@+id/adapter_mymusic_item_image" />
 
     <TextView
