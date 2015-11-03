@@ -50,7 +50,11 @@ public class PlayingInfoFragment extends BaseFragment implements IPlayingInfoVie
 
     @Override
     public void setPlayingInfo(PlayingInfoModel info) {
+        if(info == null) return;
+
         _textView.setText(info.Title);
+
+        if(info.Cover == null) return;
 
         if(_currentInfo == null){
             _imageView.setImageBitmap(null);

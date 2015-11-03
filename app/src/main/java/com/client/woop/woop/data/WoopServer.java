@@ -464,7 +464,7 @@ public class WoopServer implements IWoopServer {
 
     private void setPlayingInfo(PlayingInfoModel info){
         _currentPlayinginfo = info;
-        if(_infoChangedCallbacks != null && _infoChangedCallbacks.size() > 0){
+        if( _infoChangedCallbacks != null && _infoChangedCallbacks.size() > 0){
             callInfoChangeListener(info);
         }
     }
