@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -122,9 +123,9 @@ public class BaseActivity extends AppCompatActivity
         MenuItem item = _menu.findItem(R.id.action_server_status);
         if(item != null){
             if(status){
-                item.setIcon(this.getDrawable(R.mipmap.online));
+                item.setIcon(ContextCompat.getDrawable(this, R.mipmap.online));
             }else{
-                item.setIcon(this.getDrawable(R.mipmap.offline));
+                item.setIcon(ContextCompat.getDrawable(this, R.mipmap.offline));
             }
         }
     }

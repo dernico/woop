@@ -12,8 +12,8 @@ import org.json.JSONObject;
 public class JSONDownloader {
 
     public interface JSONDownloadCompleteListener{
-        void jsonComplete(JSONObject json);
-        void errorOccured(Exception ex);
+        void jsonComplete(HttpOptions options, JSONObject json);
+        void errorOccured(HttpOptions options);
     }
 
     private static String TAG = JSONDownloader.class.getSimpleName();
@@ -39,16 +39,16 @@ public class JSONDownloader {
                         options.setError(e);
                     }
                     if(options.hasError){
-                        jsonListener.errorOccured(options.getError());
+                        jsonListener.errorOccured(options);
                     }else{
-                        jsonListener.jsonComplete(json);
+                        jsonListener.jsonComplete(options, json);
                     }
                 }
             }
 
             @Override
             public void errorCallBack(HttpOptions options) {
-                jsonListener.errorOccured(options.getError());
+                jsonListener.errorOccured(options);
             }
         });
     }

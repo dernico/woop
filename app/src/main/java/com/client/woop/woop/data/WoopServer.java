@@ -76,6 +76,28 @@ public class WoopServer implements IWoopServer {
         return _server;
     }
 
+    private void makeJSONRequest(HttpOptions options, final JSONDownloader.JSONDownloadCompleteListener callback){
+        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(HttpOptions options, JSONObject json) {
+                setServerAvailableStatus(true);
+                if(callback != null) {
+                    callback.jsonComplete(options, json);
+                }
+            }
+
+            @Override
+            public void errorOccured(HttpOptions options) {
+                if (!(options.getError() instanceof JSONException)){
+                    setServerAvailableStatus(false);
+                }
+                if(callback != null) {
+                    callback.errorOccured(options);
+                }
+            }
+        }).execute();
+    }
+
     @Override
     public boolean isServiceAdressSet() {
         if(_serviceHostAdress == null){
@@ -285,9 +307,9 @@ public class WoopServer implements IWoopServer {
     @Override
     public void getMyMusic(final WoopDataReceived<List<ServerMusicModel>> callback) {
         HttpOptions options = new HttpOptions(_serviceHostAdress + "/api/music/listcomplete");
-        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
-            public void jsonComplete(JSONObject json) {
+            public void jsonComplete(HttpOptions options, JSONObject json) {
                 try {
                     int count = json.getInt("count");
                     JSONArray liste = json.getJSONArray("list");
@@ -302,25 +324,23 @@ public class WoopServer implements IWoopServer {
             }
 
             @Override
-            public void errorOccured(Exception ex) {
-
-                setServerAvailableStatus(false);
-                callback.errorReceived(ex);
+            public void errorOccured(HttpOptions options) {
+                callback.errorReceived(options.getError());
             }
-        }).execute();
+        });
     }
 
 
     @Override
     public void getSavedStreams(final WoopDataReceived<List<StreamModel>> result) {
 
-        new JSONDownloader(new HttpOptions(_serviceHostAdress + "/api/music/streams"), new JSONDownloader.JSONDownloadCompleteListener() {
+        makeJSONRequest(new HttpOptions(_serviceHostAdress + "/api/music/streams"), new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
-            public void jsonComplete(JSONObject json) {
+            public void jsonComplete(HttpOptions options, JSONObject json) {
                 List<StreamModel> streams = new ArrayList<StreamModel>();
                 try {
                     JSONArray aStreams = json.getJSONArray("streams");
-                    for(int i = 0; i < aStreams.length(); i++){
+                    for (int i = 0; i < aStreams.length(); i++) {
                         streams.add(StreamModel.createFromJson(aStreams.getJSONObject(i)));
                     }
                 } catch (JSONException e) {
@@ -330,11 +350,10 @@ public class WoopServer implements IWoopServer {
             }
 
             @Override
-            public void errorOccured(Exception ex) {
-                setServerAvailableStatus(false);
-                result.errorReceived(ex);
+            public void errorOccured(HttpOptions options) {
+                result.errorReceived(options.getError());
             }
-        }).execute();
+        });
     }
 
     @Override
@@ -346,20 +365,19 @@ public class WoopServer implements IWoopServer {
         HashMap<String, String> data = new HashMap<>();
         data.put("stream", stream.getStream());
         options.setPostData(data);
-        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
-            public void jsonComplete(JSONObject json) {
+            public void jsonComplete(HttpOptions options, JSONObject json) {
 
                 setPlayingInfo(PlayingInfoModel.createFromJson(json));
                 callback.dataReceived(_currentPlayinginfo);
             }
 
             @Override
-            public void errorOccured(Exception ex) {
-                setServerAvailableStatus(false);
-                callback.errorReceived(ex);
+            public void errorOccured(HttpOptions options) {
+                callback.errorReceived(options.getError());
             }
-        }).execute();
+        });
     }
 
     @Override
@@ -375,12 +393,11 @@ public class WoopServer implements IWoopServer {
                 10000 // wait ten seconds, you never know :)
         );
 
-        new HttpRequest(options, new HttpRequest.DownloadCompleteListener() {
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
-            public void completionCallBack(HttpOptions options, String result) {
+            public void jsonComplete(HttpOptions options, JSONObject json) {
                 try {
                     List<TuneInModel> streams = new ArrayList();
-                    JSONObject json = new JSONObject(result);
                     JSONArray results = json.getJSONArray("result");
                     for(int i = 0; i < results.length(); i++){
                         streams.add(TuneInModel.create(results.getJSONObject(i)));
@@ -393,10 +410,10 @@ public class WoopServer implements IWoopServer {
             }
 
             @Override
-            public void errorCallBack(HttpOptions options) {
+            public void errorOccured(HttpOptions options) {
                 callback.errorReceived(options.getError());
             }
-        }).execute();
+        });
     }
 
     @Override
@@ -416,20 +433,19 @@ public class WoopServer implements IWoopServer {
             return;
         }
 
-        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
-            public void jsonComplete(JSONObject json) {
+            public void jsonComplete(HttpOptions options, JSONObject json) {
                 PlayingInfoModel info = PlayingInfoModel.createFromJson(json);
                 setPlayingInfo(info);
                 callback.dataReceived(info);
             }
 
             @Override
-            public void errorOccured(Exception ex) {
-                setServerAvailableStatus(false);
-                callback.errorReceived(ex);
+            public void errorOccured(HttpOptions options) {
+                callback.errorReceived(options.getError());
             }
-        }).execute();
+        });
     }
 
     //private functions
@@ -437,23 +453,22 @@ public class WoopServer implements IWoopServer {
     private void playControlCall(String apiPart, final WoopDataReceived<PlayingInfoModel> callback){
 
         HttpOptions options = new HttpOptions(_serviceHostAdress + apiPart);
-        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
-            public void jsonComplete(JSONObject json) {
+            public void jsonComplete(HttpOptions options, JSONObject json) {
                 setPlayingInfo(PlayingInfoModel.createFromJson(json));
-                if(callback != null){
+                if (callback != null) {
                     callback.dataReceived(_currentPlayinginfo);
                 }
             }
 
             @Override
-            public void errorOccured(Exception ex) {
-                setServerAvailableStatus(false);
-                if(callback != null) {
-                    callback.errorReceived(ex);
+            public void errorOccured(HttpOptions options) {
+                if (callback != null) {
+                    callback.errorReceived(options.getError());
                 }
             }
-        }).execute();
+        });
     }
 
     private void setServerAvailableStatus(boolean status){
