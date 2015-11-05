@@ -7,6 +7,6 @@
     <dimen name="cover_image_size">100dp</dimen>
     <dimen name="cover_image_size_small">60dp</dimen>
 
-    <dimen name="play_control_button_size">40dp</dimen>
+    <dimen name="play_control_button_size">50dp</dimen>
     <dimen name="play_control_button_margin">5dp</dimen>
 </resources>
