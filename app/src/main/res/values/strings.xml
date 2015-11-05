@@ -6,8 +6,6 @@
     <string name="login_login_text">Please login with your google Account</string>
     <string name="title_activity_main">Woop</string>
 
-    <string name="fragment_play_controls_playText">Play</string>
-    <string name="fragment_play_controls_pauseText">Pause</string>
     <string name="fragment_play_controls_volume">Volume: </string>
 
     <string name="navigation_open">Navigation Open</string>

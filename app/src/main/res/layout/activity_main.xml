@@ -43,12 +43,12 @@
     </fragment>
 
     <fragment
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:name="com.client.woop.woop.fragments.PlayingInfoFragment"
         tools:layout="@layout/fragment_playing_info"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
+
         android:id="@+id/fragment"
         android:layout_toLeftOf="@+id/activity_main_player_control"
         android:layout_toStartOf="@+id/activity_main_player_control">

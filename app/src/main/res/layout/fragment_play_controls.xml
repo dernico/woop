@@ -10,37 +10,58 @@
 
     <TextView
         android:id="@+id/fragment_play_controls_volume"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:layout_margin="@dimen/play_control_button_margin"
+        />
 
-    <Button android:id="@+id/fragment_play_controls_prev"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prev" />
+    <ImageButton android:id="@+id/fragment_play_controls_prev"
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:layout_margin="@dimen/play_control_button_margin"
+        android:scaleType="fitCenter"
+        android:padding="1dp"
+        android:src="@drawable/prev" />
 
-    <Button android:id="@+id/fragment_play_controls_play_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play/Pause" />
+    <ImageButton android:id="@+id/fragment_play_controls_play_pause"
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:layout_margin="@dimen/play_control_button_margin"
+        android:scaleType="fitCenter"
+        android:padding="1dp"
+        android:src="@drawable/play" />
 
-    <Button android:id="@+id/fragment_play_controls_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Next" />
+    <ImageButton android:id="@+id/fragment_play_controls_next"
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:layout_margin="@dimen/play_control_button_margin"
+        android:scaleType="fitCenter"
+        android:padding="1dp"
+        android:src="@drawable/next" />
 
-    <Button android:id="@+id/fragment_play_controls_play_shuffle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Shuffle" />
+    <ImageButton android:id="@+id/fragment_play_controls_play_shuffle"
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:layout_margin="@dimen/play_control_button_margin"
+        android:scaleType="fitCenter"
+        android:padding="1dp"
+        android:src="@drawable/shuffle_off" />
 
-    <Button android:id="@+id/fragment_play_controls_play_volUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vol Up" />
+    <ImageButton android:id="@+id/fragment_play_controls_play_volUp"
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:layout_margin="@dimen/play_control_button_margin"
+        android:scaleType="fitCenter"
+        android:padding="1dp"
+        android:src="@drawable/vol_up" />
 
-    <Button android:id="@+id/fragment_play_controls_play_volDown"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Vol Down" />
+    <ImageButton android:id="@+id/fragment_play_controls_play_volDown"
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:layout_margin="@dimen/play_control_button_margin"
+        android:scaleType="fitCenter"
+        android:padding="1dp"
+        android:src="@drawable/vol_down"
+        />
     
 </LinearLayout>

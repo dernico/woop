@@ -76,28 +76,6 @@ public class WoopServer implements IWoopServer {
         return _server;
     }
 
-    private void makeJSONRequest(HttpOptions options, final JSONDownloader.JSONDownloadCompleteListener callback){
-        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
-            @Override
-            public void jsonComplete(HttpOptions options, JSONObject json) {
-                setServerAvailableStatus(true);
-                if(callback != null) {
-                    callback.jsonComplete(options, json);
-                }
-            }
-
-            @Override
-            public void errorOccured(HttpOptions options) {
-                if (!(options.getError() instanceof JSONException)){
-                    setServerAvailableStatus(false);
-                }
-                if(callback != null) {
-                    callback.errorOccured(options);
-                }
-            }
-        }).execute();
-    }
-
     @Override
     public boolean isServiceAdressSet() {
         if(_serviceHostAdress == null){
@@ -330,7 +308,6 @@ public class WoopServer implements IWoopServer {
         });
     }
 
-
     @Override
     public void getSavedStreams(final WoopDataReceived<List<StreamModel>> result) {
 
@@ -469,6 +446,29 @@ public class WoopServer implements IWoopServer {
                 }
             }
         });
+    }
+
+
+    private void makeJSONRequest(HttpOptions options, final JSONDownloader.JSONDownloadCompleteListener callback){
+        new JSONDownloader(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(HttpOptions options, JSONObject json) {
+                setServerAvailableStatus(true);
+                if(callback != null) {
+                    callback.jsonComplete(options, json);
+                }
+            }
+
+            @Override
+            public void errorOccured(HttpOptions options) {
+                if (!(options.getError() instanceof JSONException)){
+                    setServerAvailableStatus(false);
+                }
+                if(callback != null) {
+                    callback.errorOccured(options);
+                }
+            }
+        }).execute();
     }
 
     private void setServerAvailableStatus(boolean status){

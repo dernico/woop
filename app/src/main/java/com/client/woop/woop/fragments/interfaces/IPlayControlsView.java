@@ -5,4 +5,6 @@ public interface IPlayControlsView {
     void setVolume(String volume);
     void setPlaying();
     void setPause();
+    void setShuffleOn();
+    void setShuffleOff();
 }

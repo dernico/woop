@@ -51,7 +51,16 @@ public class PlayControlsController implements
 
     private void setInfoStates(PlayingInfoModel info){
         this.setPlayState(info);
+        this.setShuffleState(info);
         _view.setVolume("" + info.Volume);
+    }
+
+    private void setShuffleState(PlayingInfoModel info){
+        if(info.IsRandom){
+            _view.setShuffleOn();
+        }else{
+            _view.setShuffleOff();
+        }
     }
 
     private void setPlayState(PlayingInfoModel info){
