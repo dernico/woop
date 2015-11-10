@@ -2,7 +2,7 @@ package com.client.woop.woop.data;
 
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
-import com.client.woop.woop.data.interfaces.IClientDataStorage;
+import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.models.LocalMusicModel;
@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public class WoopServer implements IWoopServer {
     private static ILogger _logger = new Logger();
     private String _serviceHostAdress;
 
-    private IClientDataStorage _storage;
+    private IKeyValueStorage _storage;
     private IDeviceData _deviceData;
     private PlayingInfoModel _currentPlayinginfo;
     private HashMap<String, WoopInfoChanged> _infoChangedCallbacks;
@@ -61,14 +60,14 @@ public class WoopServer implements IWoopServer {
         void infoChanged(PlayingInfoModel info);
     }
 
-    private WoopServer(IClientDataStorage storage, IDeviceData deviceData){
+    private WoopServer(IKeyValueStorage storage, IDeviceData deviceData){
         _storage = storage;
         _deviceData = deviceData;
         _serviceHostAdress = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
         _infoChangedCallbacks = new HashMap<>();
     }
 
-    public static WoopServer singelton(IClientDataStorage storage, IDeviceData deviceData){
+    public static WoopServer singelton(IKeyValueStorage storage, IDeviceData deviceData){
         if(_server == null){
             _logger.info(TAG, "Woop server gets created");
             _server = new WoopServer(storage, deviceData);

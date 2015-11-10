@@ -2,10 +2,11 @@ package com.client.woop.woop.data;
 
 import android.content.SharedPreferences;
 
-import com.client.woop.woop.data.interfaces.IClientDataStorage;
+import com.client.woop.woop.data.interfaces.IKeyValueStorage;
+import com.client.woop.woop.models.KeyValueModel;
 
 
-public class ClientDataStorage implements IClientDataStorage {
+public class ClientDataStorage implements IKeyValueStorage {
 
     private SharedPreferences _sharedPreferences;
 
@@ -14,17 +15,17 @@ public class ClientDataStorage implements IClientDataStorage {
     }
 
     @Override
-    public String getString(String key) {
-        return _sharedPreferences.getString(key, null);
+    public void getString(String key, KeyValueStoreDB.IKeyValueStoreCallback callback) {
+        String value = _sharedPreferences.getString(key, null);
+        KeyValueModel model = new KeyValueModel();
+        model.id = -1;
+        model.value = value;
+        model.key = key;
+        callback.done(model);
     }
 
     @Override
-    public int getInt(String key) {
-        return _sharedPreferences.getInt(key, -1);
-    }
-
-    @Override
-    public void putString(String key, String value) {
+    public void putString(String key, String value, KeyValueStoreDB.IKeyValueStoreCallback callback) {
         _sharedPreferences
                 .edit()
                 .putString(key, value)
@@ -32,15 +33,7 @@ public class ClientDataStorage implements IClientDataStorage {
     }
 
     @Override
-    public void putInt(String key, int value) {
-        _sharedPreferences
-                .edit()
-                .putInt(key, value)
-                .apply();
-    }
-
-    @Override
-    public void removeKey(String key) {
+    public void removeKey(String key, KeyValueStoreDB.IKeyValueStoreCallback callback) {
         _sharedPreferences.edit().remove(key);
     }
 }

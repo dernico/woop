@@ -14,7 +14,7 @@ import java.util.PriorityQueue;
 public class KeyValueStoreDB {
 
     public interface IKeyValueStoreCallback{
-        void done(Object result);
+        void done(KeyValueModel result);
         void error(Exception ex);
     }
 
@@ -25,7 +25,7 @@ public class KeyValueStoreDB {
     }
 
 
-    public void insertKeyValue(final String key, final String value){
+    public void insertKeyValue(final String key, final String value, final IKeyValueStoreCallback callback){
         new DBThread(new DBThread.IDBThreadCallback() {
             @Override
             public void doInBackground() {
@@ -44,11 +44,17 @@ public class KeyValueStoreDB {
                         KeyValueStoreContract.KeyValue.TableName,
                         null,
                         values);
+                //TODO: verify newrowid > 0
+                KeyValueModel model = new KeyValueModel();
+                model.id = newRowId;
+                model.key = key;
+                model.value = value;
+                callback.done(model);
             }
         }).execute();
     }
 
-    public void getKeyValue(final String key, IKeyValueStoreCallback callback){
+    public void getKeyValue(final String key, final IKeyValueStoreCallback callback){
 
         new DBThread(new DBThread.IDBThreadCallback() {
             @Override
@@ -98,6 +104,8 @@ public class KeyValueStoreDB {
                 model.id = itemId;
                 model.key = key;
                 model.value = value;
+
+                callback.done(model);
             }
         }).execute();
     }
