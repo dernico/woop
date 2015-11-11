@@ -1,12 +1,11 @@
 package com.client.woop.woop.controller;
 
 import com.client.woop.woop.activitys.interfaces.IMainView;
-import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.navigation.INavigation;
 
 
-public class MainController implements WoopServer.WoopServerListener {
+public class MainController {
 
     private IMainView _view;
     private INavigation _navigaiton;
@@ -16,21 +15,11 @@ public class MainController implements WoopServer.WoopServerListener {
         _view = view;
         _navigaiton = navigation;
         _woop = woop;
-        VerifyWoopServiceIsAvailable();
+        checkServerStatus();
     }
 
-    private void VerifyWoopServiceIsAvailable(){
-        _woop.isServiceAdressSet(this);
-    }
-
-    @Override
-    public void serviceFound() {
-        // We dont need to handle it here
-    }
-
-    @Override
-    public void serviceAddressSet(boolean isSet) {
-        if (!isSet){
+    private void checkServerStatus(){
+        if(!_woop.isServerOnline()){
             _navigaiton.navigateFragmentSettings();
         }
     }

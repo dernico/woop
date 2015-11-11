@@ -67,5 +67,4 @@ public class MainActivity extends BaseActivity implements IMainView {
 
         return super.onOptionsItemSelected(item);
     }
-
 }

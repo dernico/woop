@@ -2,6 +2,7 @@ package com.client.woop.woop.activitys;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,7 +26,8 @@ import com.client.woop.woop.web.ImageDownloader;
 
 
 public class BaseActivity extends AppCompatActivity
-        implements GoogleData.GoogleConnectedListener
+        implements GoogleData.GoogleConnectedListener,
+        WoopServer.IServerAvailable
 {
     private String TAG;
 
@@ -62,13 +64,7 @@ public class BaseActivity extends AppCompatActivity
 
     public IWoopServer woopServer(){
         WoopServer woop = WoopServer.singelton(new KeyValueStorage(this), new DeviceData());
-        woop.setServerAvailableCallback(new WoopServer.ServerAvailable() {
-            @Override
-            public void serverAvailable(boolean available) {
-                setServerOnlineStatus(available);
-            }
-        });
-        woop.checkIfServerIsOnline();
+        woop.setServerAvailableCallback(this);
         return woop;
     }
 
@@ -76,6 +72,7 @@ public class BaseActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         _menu = menu;
         this.setGoogleImageIcon(_google.getPerson());
+        this.setServerOnlineStatus(woopServer().isServerOnline());
         return true;
     }
 
@@ -135,18 +132,9 @@ public class BaseActivity extends AppCompatActivity
         }
 
         if(_icon == null){
-
-            new ImageDownloader(new ImageDownloader.ImageDownloadedListener() {
-                @Override
-                public void downloaded(Bitmap bitmap) {
-
-                    MenuItem item = _menu.findItem(R.id.action_user_icon);
-                    if(item != null){
-                        _icon = new BitmapDrawable(getResources(),bitmap);
-                        item.setIcon(_icon);
-                    }
-                }
-            }).execute(person.getImageUrl());
+            Bitmap bm = BitmapFactory.decodeByteArray(person.getImage(), 0, person.getImage().length);
+            _icon = new BitmapDrawable(getResources(), bm);
+            item.setIcon(_icon);
         }else{
 
             item.setIcon(_icon);
@@ -167,5 +155,11 @@ public class BaseActivity extends AppCompatActivity
 
     public void hideProgressBar() {
         _progressDialog.dismiss();
+    }
+
+
+    @Override
+    public void serverAvailable(boolean available) {
+        setServerOnlineStatus(available);
     }
 }

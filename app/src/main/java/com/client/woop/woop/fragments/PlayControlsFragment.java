@@ -114,19 +114,6 @@ public class PlayControlsFragment extends BaseFragment implements IPlayControlsV
         _volumeBar = new VolumeBar(getContext());
         ll.addView(_volumeBar);
 
-
-        /*Paint paint = new Paint();
-        paint.setColor(Color.parseColor("#CD5C5C"));
-        Bitmap bg = Bitmap.createBitmap(480, 800, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bg);
-        canvas.drawRect(10, 10, 10, 10, paint);
-        RelativeLayout ll = (RelativeLayout) v.findViewById(R.id.fragment_play_controls_volumeBar);
-
-        ImageView iV = new ImageView(ll.getContext());
-        iV.setImageBitmap(bg);
-
-        ll.addView(iV);*/
-
         return v;
     }
 

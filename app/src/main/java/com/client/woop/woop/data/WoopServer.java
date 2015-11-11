@@ -42,11 +42,11 @@ public class WoopServer implements IWoopServer {
     private IDeviceData _deviceData;
     private PlayingInfoModel _currentPlayinginfo;
     private HashMap<String, WoopInfoChanged> _infoChangedCallbacks;
-    private ServerAvailable _serverAvailableCallback;
+    private IServerAvailable _serverAvailableCallback;
+    private boolean _serverStatus;
 
     public interface WoopServerListener{
         void serviceFound();
-        void serviceAddressSet(boolean isSet);
     }
 
     public interface WoopDataReceived<T>{
@@ -54,7 +54,7 @@ public class WoopServer implements IWoopServer {
         void errorReceived(Exception ex);
     }
 
-    public interface ServerAvailable{
+    public interface IServerAvailable {
         void serverAvailable(boolean available);
     }
 
@@ -65,15 +65,6 @@ public class WoopServer implements IWoopServer {
     private WoopServer(IKeyValueStorage storage, IDeviceData deviceData){
         _storage = storage;
         _deviceData = deviceData;
-        _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS, new KeyValueStoreDB.IKeyValueStoreCallback() {
-            @Override
-            public void done(KeyValueModel result) {
-                if(result != null){
-                    _serviceHostAdress = result.value;
-                }
-
-            }
-        });
         _infoChangedCallbacks = new HashMap<>();
     }
 
@@ -86,33 +77,41 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public void isServiceAdressSet(final WoopServerListener callback) {
+    public void connect() {
+
         _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS, new KeyValueStoreDB.IKeyValueStoreCallback() {
             @Override
             public void done(KeyValueModel result) {
                 if(result != null){
-                    callback.serviceAddressSet(true);
+                    _serviceHostAdress = result.value;
+                    checkIfServerIsOnline();
                 }else{
-                    callback.serviceAddressSet(false);
+                    setServerAvailableStatus(false);
                 }
+
             }
         });
     }
 
-    public void setServerAvailableCallback(ServerAvailable callback){
+    @Override
+    public boolean isServerOnline() {
+        return _serverStatus;
+    }
+
+    public void setServerAvailableCallback(IServerAvailable callback){
         _serverAvailableCallback = callback;
     }
 
-    public void checkIfServerIsOnline(){
+    private void checkIfServerIsOnline(){
         new HttpRequest(new HttpOptions(_serviceHostAdress), new HttpRequest.DownloadCompleteListener() {
             @Override
             public void completionCallBack(HttpOptions options, String result) {
-                _serverAvailableCallback.serverAvailable(result != null);
+                setServerAvailableStatus(result != null);
             }
 
             @Override
             public void errorCallBack(HttpOptions options) {
-                _serverAvailableCallback.serverAvailable(false);
+                setServerAvailableStatus(false);
             }
         }).execute();
     }
@@ -485,6 +484,7 @@ public class WoopServer implements IWoopServer {
     }
 
     private void setServerAvailableStatus(boolean status){
+        _serverStatus = status;
         if(_serverAvailableCallback != null) {
             _serverAvailableCallback.serverAvailable(status);
         }

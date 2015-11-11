@@ -1,5 +1,7 @@
 package com.client.woop.woop.models;
 
+import android.util.Base64;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +14,7 @@ public class PersonModel {
     private String Surname;
     private String DisplayName;
     private String ImageUrl;
+    private byte[] Image;
     private String Id;
 
 
@@ -63,6 +66,7 @@ public class PersonModel {
         json.put("displayName", DisplayName);
         json.put("imageUrl", ImageUrl);
         json.put("id", Id);
+        json.put("image", Base64.encodeToString(Image, Base64.DEFAULT));
 
         return json;
     }
@@ -79,6 +83,18 @@ public class PersonModel {
         person.DisplayName = json.getString("displayName");
         person.ImageUrl = json.getString("imageUrl");
 
+        String encodedString = json.getString("image");
+        person.Image = Base64.decode(encodedString,Base64.DEFAULT);
+
+
         return person;
+    }
+
+    public byte[] getImage() {
+        return Image;
+    }
+
+    public void setImage(byte[] image) {
+        Image = image;
     }
 }

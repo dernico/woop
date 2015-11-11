@@ -28,9 +28,4 @@ public class SettingsController implements WoopServer.WoopServerListener{
         _view.hideProgressBar();
         _navigation.navigateMain();
     }
-
-    @Override
-    public void serviceAddressSet(boolean isSet) {
-        //Todo: dont need to handle it here
-    }
 }

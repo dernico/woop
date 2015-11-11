@@ -9,7 +9,7 @@ import android.graphics.Rect;
 import android.view.View;
 
 public class VolumeBar extends View {
-    int _textSize = 20;
+    int _textSize = 30;
     int _height = 0;
     String _text = "";
 

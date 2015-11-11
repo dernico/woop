@@ -11,7 +11,8 @@ import java.util.List;
 
 
 public interface IWoopServer {
-    void isServiceAdressSet(WoopServer.WoopServerListener callback);
+    void connect();
+    boolean isServerOnline();
     void findService(WoopServer.WoopServerListener callback);
 
     void subscribePlayingInfoChanged(WoopServer.WoopInfoChanged callback);

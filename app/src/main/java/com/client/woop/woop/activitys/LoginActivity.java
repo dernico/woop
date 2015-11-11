@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.client.woop.woop.R;
 import com.client.woop.woop.data.GoogleData;
-import com.client.woop.woop.data.KeyValueStorage;
 import com.google.android.gms.common.SignInButton;
 
 
@@ -31,7 +30,9 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void isavailable(boolean available) {
                 if (available) {
-                    navigation().navigateMain();
+                    //Call connect to check if server is available
+                    //gets handled by @Override serverAvailable
+                    woopServer().connect();
                 }
             }
         });
@@ -50,6 +51,15 @@ public class LoginActivity extends BaseActivity {
     @Override
     public void onConnected(Bundle bundle) {
         super.onConnected(bundle);
+        //Call connect to check if server is available
+        //gets handled by @Override serverAvailable
+        woopServer().connect();
+    }
+
+
+    @Override
+    public void serverAvailable(boolean available) {
+        super.serverAvailable(available);
         navigation().navigateMain();
     }
 }

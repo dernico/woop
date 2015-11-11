@@ -3,14 +3,19 @@ package com.client.woop.woop.data;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
+import com.client.woop.woop.R;
 import com.client.woop.woop.data.interfaces.IGoogleData;
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.models.KeyValueModel;
 import com.client.woop.woop.models.PersonModel;
+import com.client.woop.woop.web.ImageDownloader;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInConfig;
@@ -21,6 +26,8 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 
 import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
 
 public class GoogleData implements IGoogleData,
         GoogleApiClient.ConnectionCallbacks,
@@ -165,17 +172,27 @@ public class GoogleData implements IGoogleData,
 
         if(_currentPerson == null){
             _currentPerson = loadPersonInfos();
-            try {
-                String jsonString = _currentPerson.toJSON().toString();
-                _storage.putString(PERSON_STORAGE_KEY, jsonString, new KeyValueStoreDB.IKeyValueStoreCallback() {
+
+                new ImageDownloader(new ImageDownloader.ImageDownloadedListener() {
                     @Override
-                    public void done(KeyValueModel result) {
-                        //TODO: maybe do something here?
+                    public void downloaded(Bitmap bitmap) {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        _currentPerson.setImage(stream.toByteArray());
+                        try {
+                            String jsonString = _currentPerson.toJSON().toString();
+                            _storage.putString(PERSON_STORAGE_KEY, jsonString, new KeyValueStoreDB.IKeyValueStoreCallback() {
+                                @Override
+                                public void done(KeyValueModel result) {
+                                    //TODO: maybe do something here?
+                                }
+                            });
+                        } catch (JSONException e) {
+                            _logger.error(TAG, "Could not save Personinfos due to a JSON Exception: " +e.toString());
+                        }
                     }
-                });
-            } catch (JSONException e) {
-                _logger.error(TAG, "Could not save Personinfos due to a JSON Exception: " +e.toString());
-            }
+                }).execute(_currentPerson.getImageUrl());
+
 
         }
     }
