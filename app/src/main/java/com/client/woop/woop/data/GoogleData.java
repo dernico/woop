@@ -1,6 +1,7 @@
 package com.client.woop.woop.data;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 
@@ -10,6 +11,9 @@ import com.client.woop.woop.data.interfaces.IGoogleData;
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.models.KeyValueModel;
 import com.client.woop.woop.models.PersonModel;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -18,10 +22,6 @@ import com.google.android.gms.plus.Plus;
 
 import org.json.JSONException;
 
-/**
- * Created by nico on 9/30/2015.
- * TODO: Maybe cache the whole google Stuff and prove a refresh button somewhere in the UI ?
- */
 public class GoogleData implements IGoogleData,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener
@@ -32,10 +32,16 @@ public class GoogleData implements IGoogleData,
         void onConnected(Bundle bundle);
     }
 
+    public interface PersonInfoAvailableCallback{
+        void isavailable(boolean available);
+    }
+
     protected static final String PERSON_STORAGE_KEY = "GOOGLE_PERSON_JSON";
 
     /* Request code used to invoke sign in user interactions. */
     protected static final int RC_SIGN_IN = 0;
+    public static final int REQUEST_CODE_SIGN_IN = 2;
+
     protected boolean mShouldResolve = false;
     protected GoogleApiClient _googleApi;
     protected ILogger _logger;
@@ -55,17 +61,19 @@ public class GoogleData implements IGoogleData,
         _connectedListener = listener;
         _storage = storage;
 
+
         _googleApi = new GoogleApiClient.Builder(_activity)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API)
-                .addScope(new Scope(Scopes.PROFILE))
-                .addScope(new Scope(Scopes.EMAIL))
+                .addScope(Plus.SCOPE_PLUS_PROFILE)
                 .build();
+
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(final ConnectionResult connectionResult) {
+
         // Could not connect to Google Play Services.  The user needs to select an account,
         // grant permissions or resolve an error in order to sign in. Refer to the javadoc for
         // ConnectionResult to see possible error codes.
@@ -81,12 +89,11 @@ public class GoogleData implements IGoogleData,
                     _googleApi.connect();
                 }
             } else {
-                // Could not resolve the connection result, show the user an
-                // error dialog.
-                // TODO: showErrorDialog(connectionResult);
+                // Could not resolve the connection result
                 _logger.error(TAG, "Could not resolve the connection result");
             }
         }
+
     }
 
     @Override
@@ -100,6 +107,7 @@ public class GoogleData implements IGoogleData,
 
     @Override
     public void onConnectionSuspended(int i) {
+        _logger.info(TAG, "onConnectionSuspended was called.");
     }
 
 
@@ -109,23 +117,43 @@ public class GoogleData implements IGoogleData,
     }
 
     @Override
-    public boolean personInfoAvailable(){
-        KeyValueModel person = _storage.getString(PERSON_STORAGE_KEY);
-        if(person == null){
-            _googleApi.connect();
-        }else {
-            try {
-                _currentPerson = PersonModel.createFromJSON(person.value);
-                return true;
-            } catch (JSONException e) {
-                _logger.error(TAG, "Could not parse the saved person infos from sqlite: " + e.toString());
-                _googleApi.connect();
-            }
-        }
+    public void personInfoAvailable(final PersonInfoAvailableCallback callback){
+        _storage.getString(PERSON_STORAGE_KEY, new KeyValueStoreDB.IKeyValueStoreCallback() {
+            @Override
+            public void done(KeyValueModel result) {
+                if(result == null){
+                    _googleApi.connect();
+                }else {
+                    try {
+                        _currentPerson = PersonModel.createFromJSON(result.value);
+                        callback.isavailable(true);
+                        return;
 
-        return false;
+                    } catch (JSONException e) {
+                        _logger.error(TAG, "Could not parse the saved person infos from sqlite: " + e.toString());
+                        _googleApi.connect();
+                    }
+                }
+                callback.isavailable(false);
+            }
+        });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == RC_SIGN_IN) {
+            if(!_googleApi.isConnected() && !_googleApi.isConnecting()){
+                _googleApi.connect();
+            }
+            /*if (resultCode == RESULT_OK && !mPlusClient.isConnected()
+                    && !mPlusClient.isConnecting()) {
+
+                _google.connect();
+
+            }*/
+        }
+    }
 
 
     public PersonModel getPerson(){
@@ -138,7 +166,13 @@ public class GoogleData implements IGoogleData,
         if(_currentPerson == null){
             _currentPerson = loadPersonInfos();
             try {
-                _storage.putString(PERSON_STORAGE_KEY, _currentPerson.toJSON().toString());
+                String jsonString = _currentPerson.toJSON().toString();
+                _storage.putString(PERSON_STORAGE_KEY, jsonString, new KeyValueStoreDB.IKeyValueStoreCallback() {
+                    @Override
+                    public void done(KeyValueModel result) {
+                        //TODO: maybe do something here?
+                    }
+                });
             } catch (JSONException e) {
                 _logger.error(TAG, "Could not save Personinfos due to a JSON Exception: " +e.toString());
             }

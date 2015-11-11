@@ -15,13 +15,13 @@ public class KeyValueStorage implements IKeyValueStorage {
     }
 
     @Override
-    public KeyValueModel getString(String key) {
-        return _db.getKeyValue(key);
+    public void getString(String key, KeyValueStoreDB.IKeyValueStoreCallback callback) {
+        _db.getKeyValue(key, callback);
     }
 
     @Override
-    public void putString(String key, String value) {
-        _db.insertKeyValue(key, value);
+    public void putString(String key, String value, KeyValueStoreDB.IKeyValueStoreCallback callback) {
+        _db.insertKeyValue(key, value, callback);
     }
 
     @Override

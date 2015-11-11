@@ -46,6 +46,7 @@ public class WoopServer implements IWoopServer {
 
     public interface WoopServerListener{
         void serviceFound();
+        void serviceAddressSet(boolean isSet);
     }
 
     public interface WoopDataReceived<T>{
@@ -64,10 +65,15 @@ public class WoopServer implements IWoopServer {
     private WoopServer(IKeyValueStorage storage, IDeviceData deviceData){
         _storage = storage;
         _deviceData = deviceData;
-        KeyValueModel result = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
-        if(result != null){
-            _serviceHostAdress = result.value;
-        }
+        _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS, new KeyValueStoreDB.IKeyValueStoreCallback() {
+            @Override
+            public void done(KeyValueModel result) {
+                if(result != null){
+                    _serviceHostAdress = result.value;
+                }
+
+            }
+        });
         _infoChangedCallbacks = new HashMap<>();
     }
 
@@ -80,11 +86,17 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
-    public boolean isServiceAdressSet() {
-        if(_serviceHostAdress == null){
-            return false;
-        }
-        return true;
+    public void isServiceAdressSet(final WoopServerListener callback) {
+        _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS, new KeyValueStoreDB.IKeyValueStoreCallback() {
+            @Override
+            public void done(KeyValueModel result) {
+                if(result != null){
+                    callback.serviceAddressSet(true);
+                }else{
+                    callback.serviceAddressSet(false);
+                }
+            }
+        });
     }
 
     public void setServerAvailableCallback(ServerAvailable callback){
@@ -121,8 +133,12 @@ public class WoopServer implements IWoopServer {
                         for (int i = 0; i < downloader.size(); i++) {
                             downloader.get(i).cancel(true);
                         }
-                        _storage.putString(SHARED_DATA_SERVICE_HOST_ADDRESS, _serviceHostAdress);
-                        listener.serviceFound();
+                        _storage.putString(SHARED_DATA_SERVICE_HOST_ADDRESS, _serviceHostAdress, new KeyValueStoreDB.IKeyValueStoreCallback() {
+                            @Override
+                            public void done(KeyValueModel result) {
+                                listener.serviceFound();
+                            }
+                        });
                     }
                 }
 

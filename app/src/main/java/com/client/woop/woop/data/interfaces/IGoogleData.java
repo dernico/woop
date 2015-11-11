@@ -1,14 +1,16 @@
 package com.client.woop.woop.data.interfaces;
 
+import android.content.Intent;
+
+import com.client.woop.woop.data.GoogleData;
 import com.client.woop.woop.models.PersonModel;
 
-/**
- * Created by nico on 9/30/2015.
- */
+
 public interface IGoogleData {
     void connect();
-    boolean personInfoAvailable();
-    //boolean loggedIn();
+    void personInfoAvailable(GoogleData.PersonInfoAvailableCallback callback);
+
+    void onActivityResult(int requestCode, int resultCode, Intent data);
 
     PersonModel getPerson();
 }

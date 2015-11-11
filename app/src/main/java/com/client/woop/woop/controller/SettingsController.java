@@ -6,7 +6,7 @@ import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.navigation.INavigation;
 
 
-public class SettingsController {
+public class SettingsController implements WoopServer.WoopServerListener{
 
     private ISettingsView _view;
     private IWoopServer _woop;
@@ -20,12 +20,17 @@ public class SettingsController {
 
     public void searchServer(){
         _view.showProgressBar("Loading", "Busy finding woop server");
-        _woop.findService(new WoopServer.WoopServerListener() {
-            @Override
-            public void serviceFound() {
-                _view.hideProgressBar();
-                _navigation.navigateMain();
-            }
-        });
+        _woop.findService(this);
+    }
+
+    @Override
+    public void serviceFound() {
+        _view.hideProgressBar();
+        _navigation.navigateMain();
+    }
+
+    @Override
+    public void serviceAddressSet(boolean isSet) {
+        //Todo: dont need to handle it here
     }
 }

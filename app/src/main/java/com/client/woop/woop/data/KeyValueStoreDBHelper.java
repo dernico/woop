@@ -15,13 +15,29 @@ public class KeyValueStoreDBHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(KeyValueStoreContract.SQL_CREATE_KeyValueStore);
+    public void onCreate(final SQLiteDatabase db) {
+        new Runnable(){
+            @Override
+            public void run() {
+
+                db.execSQL(KeyValueStoreContract.SQL_CREATE_KeyValueStore);
+            }
+        }.run();
+
     }
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO: Implement proper upgrade handling
-        db.execSQL(KeyValueStoreContract.SQL_DELETE_KeyValueStore);
-        onCreate(db);
+    public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
+
+        new Runnable(){
+            @Override
+            public void run() {
+
+                // TODO: Implement proper upgrade handling
+                db.execSQL(KeyValueStoreContract.SQL_DELETE_KeyValueStore);
+                onCreate(db);
+            }
+        }.run();
+
+
     }
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onUpgrade(db, oldVersion, newVersion);
