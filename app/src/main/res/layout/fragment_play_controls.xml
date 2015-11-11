@@ -9,11 +9,18 @@
     >
 
 
-    <TextView
+    <!--<TextView
         android:id="@+id/fragment_play_controls_volume"
         android:layout_width="@dimen/play_control_button_size"
         android:layout_height="@dimen/play_control_button_size"
         android:layout_margin="@dimen/play_control_button_margin"
+        />-->
+
+    <RelativeLayout
+        android:id="@+id/fragment_play_controls_volumeBar"
+        android:layout_width="@dimen/play_control_button_size"
+        android:layout_height="@dimen/play_control_button_size"
+        android:padding="1dp"
         />
 
     <ImageButton android:id="@+id/fragment_play_controls_prev"

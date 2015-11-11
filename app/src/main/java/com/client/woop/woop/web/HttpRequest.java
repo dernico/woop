@@ -69,7 +69,6 @@ public class HttpRequest extends AsyncTask<Void, Void, String> {
             // Starts the query
             conn.connect();
             int response = conn.getResponseCode();
-            Log.d("HttpRequest", "The response code is: " + response);
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
