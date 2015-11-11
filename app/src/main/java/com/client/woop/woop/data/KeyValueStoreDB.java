@@ -17,16 +17,14 @@ public class KeyValueStoreDB {
 
 
     public KeyValueModel insertKeyValue(final String key, final String value){
-        // Gets the data repository in write mode
+        deleteKey(key);
+
         SQLiteDatabase db = _helper.getWritableDatabase();
 
-        // Create a new map of values, where column names are the keys
         ContentValues values = new ContentValues();
-        //values.put(KeyValueStoreContract.KeyValue.COLUMN_NAME_ENTRY_ID, id);
         values.put(KeyValueStoreContract.KeyValue.Key, key);
         values.put(KeyValueStoreContract.KeyValue.Value, value);
 
-        // Insert the new row, returning the primary key value of the new row
         long newRowId;
         newRowId = db.insert(
                 KeyValueStoreContract.KeyValue.TableName,
@@ -94,5 +92,14 @@ public class KeyValueStoreDB {
         model.key = itemKey;
         model.value = itemValue;
         return model;
+    }
+
+    public void deleteKey(String key){
+        SQLiteDatabase db = _helper.getWritableDatabase();
+
+        String selection = KeyValueStoreContract.KeyValue.Key + " = ?";
+        String[] selectionArgs = { key };
+        // Issue SQL statement.
+        db.delete(KeyValueStoreContract.KeyValue.TableName, selection, selectionArgs);
     }
 }
