@@ -4,6 +4,7 @@ package com.client.woop.woop.data;
 import android.content.Context;
 
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
+import com.client.woop.woop.models.KeyValueModel;
 
 public class KeyValueStorage implements IKeyValueStorage {
 
@@ -14,17 +15,17 @@ public class KeyValueStorage implements IKeyValueStorage {
     }
 
     @Override
-    public void getString(String key, KeyValueStoreDB.IKeyValueStoreCallback callback) {
-        _db.getKeyValue(key, callback);
+    public KeyValueModel getString(String key) {
+        return _db.getKeyValue(key);
     }
 
     @Override
-    public void putString(String key, String value, KeyValueStoreDB.IKeyValueStoreCallback callback) {
-        _db.insertKeyValue(key, value, callback);
+    public void putString(String key, String value) {
+        _db.insertKeyValue(key, value);
     }
 
     @Override
-    public void removeKey(String key, KeyValueStoreDB.IKeyValueStoreCallback callback) {
+    public void removeKey(String key) {
 
     }
 }

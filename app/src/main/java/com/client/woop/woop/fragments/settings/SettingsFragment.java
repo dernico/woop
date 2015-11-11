@@ -60,14 +60,6 @@ public class SettingsFragment extends BaseFragment implements ISettingsView{
             }
         });
 
-        btn = (Button) v.findViewById(R.id.fragment_settings_reset_server_button);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                _controller.resetServer();
-            }
-        });
-
         _controller = new SettingsController(this, woopServer(), navigation());
 
         return v;

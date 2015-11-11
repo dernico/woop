@@ -28,11 +28,4 @@ public class SettingsController {
             }
         });
     }
-
-    public void resetServer(){
-        _woop.resetService();
-        searchServer();
-    }
-
-
 }

@@ -18,6 +18,7 @@ import com.client.woop.woop.R;
 import com.client.woop.woop.data.ClientDataStorage;
 import com.client.woop.woop.data.DeviceData;
 import com.client.woop.woop.data.GoogleData;
+import com.client.woop.woop.data.KeyValueStorage;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.fragments.NavigationFragment;
@@ -59,23 +60,13 @@ public class BaseActivity extends AppCompatActivity
 
     }
 
-   /* public void setNavigationFragment(){
-
-        _navigationFragment = (NavigationFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.navigation_fragment);
-
-        _navigationFragment.setUp(
-                R.id.navigation_fragment,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-    }*/
-
     public INavigation navigation(){
         return _navigator;
     }
 
     public IWoopServer woopServer(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        WoopServer woop = WoopServer.singelton(new ClientDataStorage(prefs), new DeviceData());
+        WoopServer woop = WoopServer.singelton(new KeyValueStorage(this), new DeviceData());
         woop.setServerAvailableCallback(new WoopServer.ServerAvailable() {
             @Override
             public void serverAvailable(boolean available) {

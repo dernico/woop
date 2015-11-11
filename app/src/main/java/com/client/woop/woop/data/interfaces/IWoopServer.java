@@ -13,7 +13,6 @@ import java.util.List;
 public interface IWoopServer {
     boolean isServiceAdressSet();
     void findService(WoopServer.WoopServerListener callback);
-    void resetService();
 
     void subscribePlayingInfoChanged(WoopServer.WoopInfoChanged callback);
 

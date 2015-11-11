@@ -5,6 +5,7 @@ import com.client.woop.woop.Logger;
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
+import com.client.woop.woop.models.KeyValueModel;
 import com.client.woop.woop.models.LocalMusicModel;
 import com.client.woop.woop.models.ServerMusicModel;
 import com.client.woop.woop.models.PlayingInfoModel;
@@ -63,7 +64,10 @@ public class WoopServer implements IWoopServer {
     private WoopServer(IKeyValueStorage storage, IDeviceData deviceData){
         _storage = storage;
         _deviceData = deviceData;
-        _serviceHostAdress = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
+        KeyValueModel result = _storage.getString(SHARED_DATA_SERVICE_HOST_ADDRESS);
+        if(result != null){
+            _serviceHostAdress = result.value;
+        }
         _infoChangedCallbacks = new HashMap<>();
     }
 
@@ -132,12 +136,6 @@ public class WoopServer implements IWoopServer {
         for(int i = 0; i < downloader.size(); i++){
             downloader.get(i).execute();
         }
-
-    }
-
-    @Override
-    public void resetService() {
-        _storage.removeKey(SHARED_DATA_SERVICE_HOST_ADDRESS);
     }
 
     @Override

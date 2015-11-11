@@ -1,10 +1,5 @@
 package com.client.woop.woop.data;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.provider.BaseColumns;
 
 public final class KeyValueStoreContract {
@@ -23,7 +18,7 @@ public final class KeyValueStoreContract {
             "CREATE TABLE " + KeyValue.TableName + " (" +
                     KeyValue._ID + " INTEGER PRIMARY KEY," +
                     KeyValue.Key + TEXT_TYPE + COMMA_SEP +
-                    KeyValue.Value + TEXT_TYPE + COMMA_SEP +
+                    KeyValue.Value + TEXT_TYPE +
             " )";
 
     public static final String SQL_DELETE_KeyValueStore =

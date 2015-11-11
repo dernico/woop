@@ -15,17 +15,17 @@ public class ClientDataStorage implements IKeyValueStorage {
     }
 
     @Override
-    public void getString(String key, KeyValueStoreDB.IKeyValueStoreCallback callback) {
+    public KeyValueModel getString(String key) {
         String value = _sharedPreferences.getString(key, null);
         KeyValueModel model = new KeyValueModel();
         model.id = -1;
         model.value = value;
         model.key = key;
-        callback.done(model);
+        return model;
     }
 
     @Override
-    public void putString(String key, String value, KeyValueStoreDB.IKeyValueStoreCallback callback) {
+    public void putString(String key, String value) {
         _sharedPreferences
                 .edit()
                 .putString(key, value)
@@ -33,7 +33,7 @@ public class ClientDataStorage implements IKeyValueStorage {
     }
 
     @Override
-    public void removeKey(String key, KeyValueStoreDB.IKeyValueStoreCallback callback) {
+    public void removeKey(String key) {
         _sharedPreferences.edit().remove(key);
     }
 }

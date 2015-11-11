@@ -10,12 +10,5 @@
         android:text="@string/settings_search_server_button"
         android:id="@+id/fragment_settings_search_woop_button" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_reset_server_button"
-        android:id="@+id/fragment_settings_reset_server_button"
-        android:layout_gravity="right|top" />
-
 
 </FrameLayout>
