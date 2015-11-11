@@ -1,14 +1,14 @@
 package com.client.woop.woop.data.interfaces;
 
-import com.client.woop.woop.models.Person;
+import com.client.woop.woop.models.PersonModel;
 
 /**
  * Created by nico on 9/30/2015.
  */
 public interface IGoogleData {
     void connect();
-    void tryConnect();
+    boolean personInfoAvailable();
     //boolean loggedIn();
 
-    Person getPerson();
+    PersonModel getPerson();
 }

@@ -18,7 +18,7 @@ import com.client.woop.woop.data.GoogleData;
 import com.client.woop.woop.data.KeyValueStorage;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
-import com.client.woop.woop.models.Person;
+import com.client.woop.woop.models.PersonModel;
 import com.client.woop.woop.navigation.INavigation;
 import com.client.woop.woop.navigation.Navigation;
 import com.client.woop.woop.web.ImageDownloader;
@@ -51,7 +51,7 @@ public class BaseActivity extends AppCompatActivity
 
         _progressDialog = new ProgressDialog(this);
 
-        _google = new GoogleData(this, this);
+        _google = new GoogleData(this, new KeyValueStorage(this), this);
 
 
     }
@@ -116,7 +116,7 @@ public class BaseActivity extends AppCompatActivity
         }
     }
 
-    private void setGoogleImageIcon(Person person){
+    private void setGoogleImageIcon(PersonModel person){
         _logger.info(TAG, "Setting Menu Icon with Profil Image");
 
         if (person == null) {

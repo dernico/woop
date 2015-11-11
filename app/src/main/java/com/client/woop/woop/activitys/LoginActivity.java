@@ -24,7 +24,10 @@ public class LoginActivity extends BaseActivity {
             }
         });
 
-        _google.tryConnect();
+        boolean available = _google.personInfoAvailable();
+        if(available){
+            navigation().navigateMain();
+        }
     }
 
     @Override

@@ -7,12 +7,16 @@ import android.os.Bundle;
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
 import com.client.woop.woop.data.interfaces.IGoogleData;
-import com.client.woop.woop.models.Person;
+import com.client.woop.woop.data.interfaces.IKeyValueStorage;
+import com.client.woop.woop.models.KeyValueModel;
+import com.client.woop.woop.models.PersonModel;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
+
+import org.json.JSONException;
 
 /**
  * Created by nico on 9/30/2015.
@@ -28,28 +32,28 @@ public class GoogleData implements IGoogleData,
         void onConnected(Bundle bundle);
     }
 
+    protected static final String PERSON_STORAGE_KEY = "GOOGLE_PERSON_JSON";
 
     /* Request code used to invoke sign in user interactions. */
     protected static final int RC_SIGN_IN = 0;
-
-
-    /* Should we automatically resolve ConnectionResults when possible? */
     protected boolean mShouldResolve = false;
     protected GoogleApiClient _googleApi;
     protected ILogger _logger;
 
     protected Activity _activity;
 
-    private static Person _currentPerson;
+    private static PersonModel _currentPerson;
     private GoogleConnectedListener _connectedListener;
+    private IKeyValueStorage _storage;
 
-    public GoogleData(Activity activity, GoogleData.GoogleConnectedListener listener){
+    public GoogleData(Activity activity, IKeyValueStorage storage, GoogleData.GoogleConnectedListener listener){
         if(listener == null){
             throw new NullPointerException("GoogleData.GoogleConnectedListener should not be empty! Better implement it");
         }
         _logger = new Logger();
         _activity = activity;
         _connectedListener = listener;
+        _storage = storage;
 
         _googleApi = new GoogleApiClient.Builder(_activity)
                 .addConnectionCallbacks(this)
@@ -72,10 +76,8 @@ public class GoogleData implements IGoogleData,
             if (connectionResult.hasResolution()) {
                 try {
                     connectionResult.startResolutionForResult(_activity, RC_SIGN_IN);
-                    //mIsResolving = true;
                 } catch (IntentSender.SendIntentException e) {
                     _logger.error(TAG, "Could not resolve ConnectionResult." + e.toString());
-                    //mIsResolving = false;
                     _googleApi.connect();
                 }
             } else {
@@ -85,38 +87,13 @@ public class GoogleData implements IGoogleData,
                 _logger.error(TAG, "Could not resolve the connection result");
             }
         }
-
-
-       /* if (!mIsResolving && mShouldResolve) {
-            if (connectionResult.hasResolution()) {
-                try {
-                    connectionResult.startResolutionForResult(this, RC_SIGN_IN);
-                    mIsResolving = true;
-                } catch (IntentSender.SendIntentException e) {
-                    Log.e(tag, "Could not resolve ConnectionResult.", e);
-                    mIsResolving = false;
-                    _googleApi.connect();
-                }
-            } else {
-                // Could not resolve the connection result, show the user an
-                // error dialog.
-                // TODO: showErrorDialog(connectionResult);
-                Log.e(tag, "Could not resolve the connection result");
-            }
-        } else {
-            // Show the signed-out UI
-            // TODO: showSignedOutUI();
-            Log.e(tag, "Signed out");
-        }*/
     }
 
     @Override
     public void onConnected(Bundle bundle) {
 
         this.loadPerson();
-
         _connectedListener.onConnected(bundle);
-
         _googleApi.disconnect();
 
     }
@@ -131,15 +108,27 @@ public class GoogleData implements IGoogleData,
         _googleApi.connect();
     }
 
+    @Override
+    public boolean personInfoAvailable(){
+        KeyValueModel person = _storage.getString(PERSON_STORAGE_KEY);
+        if(person == null){
+            _googleApi.connect();
+        }else {
+            try {
+                _currentPerson = PersonModel.createFromJSON(person.value);
+                return true;
+            } catch (JSONException e) {
+                _logger.error(TAG, "Could not parse the saved person infos from sqlite: " + e.toString());
+                _googleApi.connect();
+            }
+        }
 
-    public void tryConnect(){
-        _googleApi.connect();
+        return false;
     }
 
 
 
-    public Person getPerson(){
-
+    public PersonModel getPerson(){
         return _currentPerson;
     }
 
@@ -147,16 +136,28 @@ public class GoogleData implements IGoogleData,
     private void loadPerson(){
 
         if(_currentPerson == null){
-            _currentPerson = new Person();
+            _currentPerson = loadPersonInfos();
+            try {
+                _storage.putString(PERSON_STORAGE_KEY, _currentPerson.toJSON().toString());
+            } catch (JSONException e) {
+                _logger.error(TAG, "Could not save Personinfos due to a JSON Exception: " +e.toString());
+            }
 
-            com.google.android.gms.plus.model.people.Person gP = Plus.PeopleApi.getCurrentPerson(_googleApi);
-            _currentPerson.setId(gP.getId());
-            _currentPerson.setName(gP.getName().getGivenName());
-            _currentPerson.setSurname(gP.getName().getFamilyName());
-            _currentPerson.setDisplayName(gP.getDisplayName());
-
-            _currentPerson.setImageUrl(gP.getImage().getUrl());
         }
+    }
+
+    private PersonModel loadPersonInfos(){
+
+        PersonModel model = new PersonModel();
+
+        com.google.android.gms.plus.model.people.Person gP = Plus.PeopleApi.getCurrentPerson(_googleApi);
+        model.setId(gP.getId());
+        model.setName(gP.getName().getGivenName());
+        model.setSurname(gP.getName().getFamilyName());
+        model.setDisplayName(gP.getDisplayName());
+
+        model.setImageUrl(gP.getImage().getUrl());
+        return model;
     }
 
 }

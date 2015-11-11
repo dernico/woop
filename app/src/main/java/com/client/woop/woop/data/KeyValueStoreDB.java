@@ -43,8 +43,6 @@ public class KeyValueStoreDB {
 
         SQLiteDatabase db = _helper.getReadableDatabase();
 
-        // Define a projection that specifies which columns from the database
-        // you will actually use after this query.
         String[] projection = {
                 KeyValueStoreContract.KeyValue._ID,
                 KeyValueStoreContract.KeyValue.Key,
@@ -53,14 +51,8 @@ public class KeyValueStoreDB {
 
         String selection = KeyValueStoreContract.KeyValue.Key + " = ?";
 
-        String [] selectionArgs = {
-                key
-        };
+        String [] selectionArgs = { key };
 
-        // How you want the results sorted in the resulting Cursor
-        /*String sortOrder =
-        KeyValueStoreContract.KeyValue.COLUMN_NAME_UPDATED + " DESC";
-        */
         Cursor c = db.query(
                 KeyValueStoreContract.KeyValue.TableName,  // The table to query
                 projection,                               // The columns to return
@@ -99,7 +91,6 @@ public class KeyValueStoreDB {
 
         String selection = KeyValueStoreContract.KeyValue.Key + " = ?";
         String[] selectionArgs = { key };
-        // Issue SQL statement.
         db.delete(KeyValueStoreContract.KeyValue.TableName, selection, selectionArgs);
     }
 }
