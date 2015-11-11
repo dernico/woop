@@ -9,11 +9,6 @@ import com.client.woop.woop.models.KeyValueModel;
 
 public class KeyValueStoreDB {
 
-    public interface IKeyValueStoreCallback{
-        void done(KeyValueModel result);
-        void error(Exception ex);
-    }
-
     private KeyValueStoreDBHelper _helper;
 
     public KeyValueStoreDB(Context context){

@@ -1,12 +1,10 @@
 package com.client.woop.woop.activitys;
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,13 +13,11 @@ import android.view.MenuItem;
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
 import com.client.woop.woop.R;
-import com.client.woop.woop.data.ClientDataStorage;
 import com.client.woop.woop.data.DeviceData;
 import com.client.woop.woop.data.GoogleData;
 import com.client.woop.woop.data.KeyValueStorage;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.data.interfaces.IWoopServer;
-import com.client.woop.woop.fragments.NavigationFragment;
 import com.client.woop.woop.models.Person;
 import com.client.woop.woop.navigation.INavigation;
 import com.client.woop.woop.navigation.Navigation;
@@ -65,7 +61,6 @@ public class BaseActivity extends AppCompatActivity
     }
 
     public IWoopServer woopServer(){
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         WoopServer woop = WoopServer.singelton(new KeyValueStorage(this), new DeviceData());
         woop.setServerAvailableCallback(new WoopServer.ServerAvailable() {
             @Override
