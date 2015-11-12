@@ -37,7 +37,7 @@ public class BaseActivity extends AppCompatActivity
 
     protected static ILogger _logger = new Logger();
     protected Menu _menu;
-    protected GoogleData _google;
+    private GoogleData _google;
     private static Drawable _icon;
 
 
@@ -54,16 +54,21 @@ public class BaseActivity extends AppCompatActivity
 
         _progressDialog = new ProgressDialog(this);
 
-        _google = new GoogleData(this, new KeyValueStorage(this), this);
-
-
     }
 
     public INavigation navigation(){
         return _navigator;
     }
 
-    public IGoogleData googleData() {return _google; }
+    public IGoogleData googleData() {
+        // GoogleData and api will only be create for every Activity once.
+        // If it is null e.g when rotation change occurs it will create it again
+        // for the Activity.
+        if(_google == null){
+            _google = new GoogleData(this, new KeyValueStorage(this), this);
+        }
+        return _google;
+    }
 
     public IWoopServer woopServer(){
         WoopServer woop = WoopServer.singelton(new KeyValueStorage(this), new DeviceData());
@@ -74,7 +79,7 @@ public class BaseActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         _menu = menu;
-        this.setGoogleImageIcon(_google.getPerson());
+        this.setGoogleImageIcon(googleData().getPerson());
         this.setServerOnlineStatus(woopServer().isServerOnline());
         return true;
     }

@@ -22,11 +22,11 @@ public class LoginActivity extends BaseActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                _google.connect();
+                googleData().connect();
             }
         });
 
-        _google.personInfoAvailable(new GoogleData.PersonInfoAvailableCallback() {
+        googleData().personInfoAvailable(new GoogleData.PersonInfoAvailableCallback() {
             @Override
             public void isavailable(boolean available) {
                 if (available) {
@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        _google.onActivityResult(requestCode, resultCode, data);
+        googleData().onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
