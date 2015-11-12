@@ -78,6 +78,9 @@ public class YouTubeFragment extends BaseFragment implements IYoutubeView {
 
     @Override
     public void setSearchResult(YoutubeList result) {
-        _searchResultList.setAdapter(new YouTubeAdapter(getContext(), result));
+
+        Activity activity = getActivity();
+        if(activity == null) return;
+        _searchResultList.setAdapter(new YouTubeAdapter(activity, result));
     }
 }

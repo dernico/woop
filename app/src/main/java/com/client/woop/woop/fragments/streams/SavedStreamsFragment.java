@@ -1,5 +1,6 @@
 package com.client.woop.woop.fragments.streams;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,8 @@ public class SavedStreamsFragment extends BaseFragment implements ISavedStreamsV
 
     @Override
     public void setStreams(List<StreamModel> streams) {
-        _listView.setAdapter(new FavoriteStreamAdapter(getActivity(), streams));
+        Activity activity = getActivity();
+        if(activity == null) return;
+        _listView.setAdapter(new FavoriteStreamAdapter(activity, streams));
     }
 }

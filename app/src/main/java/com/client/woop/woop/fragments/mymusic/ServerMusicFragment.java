@@ -1,6 +1,7 @@
 package com.client.woop.woop.fragments.mymusic;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -77,6 +78,8 @@ public class ServerMusicFragment extends BaseFragment implements IServerMusicVie
 
     @Override
     public void setListData(List<ServerMusicModel> liste) {
-        _listview.setAdapter(new MyMusicAdapter(getActivity(), liste));
+        Activity activity = getActivity();
+        if(activity == null) return;
+        _listview.setAdapter(new MyMusicAdapter(activity, liste));
     }
 }

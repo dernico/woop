@@ -1,6 +1,7 @@
 package com.client.woop.woop.fragments.eighttracks;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -67,7 +68,9 @@ public class EightTracksFragment extends BaseFragment implements IEightTracksVie
 
     @Override
     public void setSerachResults(EightTracksList result) {
-        _tracksResultsList.setAdapter(new EightTracksAdapter(getContext(), result));
+        Activity activity = getActivity();
+        if(activity == null) return;
+        _tracksResultsList.setAdapter(new EightTracksAdapter(activity, result));
     }
 
     @Override

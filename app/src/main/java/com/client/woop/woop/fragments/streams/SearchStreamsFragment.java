@@ -1,5 +1,6 @@
 package com.client.woop.woop.fragments.streams;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +77,9 @@ public class SearchStreamsFragment extends BaseFragment implements ISearchStream
 
     @Override
     public void setSearchResult(List<TuneInModel> result) {
-        _listview.setAdapter(new TuneInAdapter(getActivity(), result));
+        Activity activity = getActivity();
+        if(activity == null) return;
+        _listview.setAdapter(new TuneInAdapter(activity, result));
     }
 
     @Override
