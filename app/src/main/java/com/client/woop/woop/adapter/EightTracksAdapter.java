@@ -1,5 +1,6 @@
 package com.client.woop.woop.adapter;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,25 +10,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.client.woop.woop.R;
-import com.client.woop.woop.models.StreamModel;
+import com.client.woop.woop.extensions.EightTracksList;
+import com.client.woop.woop.models.EightTracksModel;
 import com.client.woop.woop.models.YouTubeModel;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
-import java.util.List;
+public class EightTracksAdapter extends ArrayAdapter<EightTracksModel> {
 
-
-public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
-
-    private List<YouTubeModel> _streams;
+    private EightTracksList _mixes;
     private Context _context;
     private ImageLoader _imageLoader;
 
-    public YouTubeAdapter(Context ctx, List<YouTubeModel> streams){
-        super(ctx, R.layout.adapter_youtube_item, streams);
+    public EightTracksAdapter(Context ctx, EightTracksList mixes){
+        super(ctx, R.layout.adapter_eighttracks_item, mixes);
 
         _context = ctx;
-        _streams = streams;
+        _mixes = mixes;
 
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(_context)
@@ -38,7 +37,7 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
 
     @Override
     public int getCount() {
-        return _streams.size();
+        return _mixes.size();
     }
 
     @Override
@@ -46,16 +45,16 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
         View v = convertView;
         if(v == null){
             LayoutInflater layout = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = layout.inflate(R.layout.adapter_youtube_item ,null);
+            v = layout.inflate(R.layout.adapter_eighttracks_item ,null);
         }
 
-        YouTubeModel stream = _streams.get(position);
+        EightTracksModel mix = _mixes.get(position);
 
-        TextView tv = (TextView) v.findViewById(R.id.adapter_youtube_item_text);
-        tv.setText(stream.get_title());
+        TextView tv = (TextView) v.findViewById(R.id.adapter_eighttracks_item_text);
+        tv.setText(mix.getName());
 
-        ImageView image = (ImageView) v.findViewById(R.id.adapter_youtube_item_image);
-        _imageLoader.displayImage(stream.get_thumbnail(), image);
+        ImageView image = (ImageView) v.findViewById(R.id.adapter_eighttracks_item_image);
+        _imageLoader.displayImage(mix.getCover(), image);
 
         return v;
     }

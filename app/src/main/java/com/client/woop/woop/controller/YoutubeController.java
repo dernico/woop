@@ -36,7 +36,10 @@ public class YoutubeController {
     public void play(int position){
         if(_searchResults != null && _searchResults.size() > 0) {
             YouTubeModel model = _searchResults.get(position);
-
+            // Sadly the server part can't play the tracks anymore
+            // Seems like youtube changed the page again so pafy
+            // cannot parse the page correct anymore ...
+            // Will find a soloution later
         }
     }
 

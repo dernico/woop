@@ -1,7 +1,9 @@
 package com.client.woop.woop.data.interfaces;
 
 import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.extensions.EightTracksList;
 import com.client.woop.woop.extensions.YoutubeList;
+import com.client.woop.woop.models.EightTracksModel;
 import com.client.woop.woop.models.LocalMusicModel;
 import com.client.woop.woop.models.ServerMusicModel;
 import com.client.woop.woop.models.PlayingInfoModel;
@@ -42,4 +44,7 @@ public interface IWoopServer {
     void playTuneInStream(TuneInModel model, WoopServer.WoopDataReceived<PlayingInfoModel> callback);
 
     void youtubeSearch(String searchterm, WoopServer.WoopDataReceived<YoutubeList> callback);
+
+    void eightTracksTag(String tag, WoopServer.WoopDataReceived<EightTracksList> callback);
+    void eightTracksPlay(EightTracksModel track, WoopServer.WoopDataReceived<PlayingInfoModel> callback);
 }

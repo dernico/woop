@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.client.woop.woop.R;
 import com.client.woop.woop.activitys.LoginActivity;
 import com.client.woop.woop.activitys.MainActivity;
+import com.client.woop.woop.fragments.eighttracks.EightTracksFragment;
 import com.client.woop.woop.fragments.mymusic.ListeFragment;
 import com.client.woop.woop.fragments.settings.SettingsFragment;
 import com.client.woop.woop.fragments.streams.StreamsFragment;
@@ -47,7 +48,7 @@ public class Navigation implements INavigation {
         FragmentManager fragmentManager = _context.getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(fragment.getTag())
+                //.addToBackStack(fragment.getTag())
                 .commit();
     }
 
@@ -69,7 +70,7 @@ public class Navigation implements INavigation {
 
     @Override
     public void navigateFragment8Tracks() {
-        //TODO: changeFragment(YouTubeFragment.newInstance());
+        changeFragment(EightTracksFragment.newInstance());
     }
 
     @Override

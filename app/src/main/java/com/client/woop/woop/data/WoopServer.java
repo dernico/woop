@@ -2,11 +2,14 @@ package com.client.woop.woop.data;
 
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
+import com.client.woop.woop.contracts.EightTracksContract;
 import com.client.woop.woop.contracts.YoutubeContract;
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
+import com.client.woop.woop.extensions.EightTracksList;
 import com.client.woop.woop.extensions.YoutubeList;
+import com.client.woop.woop.models.EightTracksModel;
 import com.client.woop.woop.models.KeyValueModel;
 import com.client.woop.woop.models.LocalMusicModel;
 import com.client.woop.woop.models.ServerMusicModel;
@@ -478,6 +481,78 @@ public class WoopServer implements IWoopServer {
             }
         });
 
+    }
+
+    @Override
+    public void eightTracksTag(String tag, final WoopDataReceived<EightTracksList> callback) {
+        tag = tag.replace("_", "__");
+        tag = tag.replace(" ", "_");
+        tag = urlEncode(tag);
+        String url = _serviceHostAdress + "/api/8tracks/tags?tag=" + tag;
+        HttpOptions options = new HttpOptions(url);
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(HttpOptions options, JSONObject json) {
+
+                try {
+                    EightTracksList eighttracks = new EightTracksList();
+                    JSONObject pageing = json.getJSONObject(EightTracksContract.paging);
+                    eighttracks.currentPage = pageing.getString(EightTracksContract.currentPage);
+                    eighttracks.nextPage = pageing.getString(EightTracksContract.nextPage);
+                    eighttracks.perPage = pageing.getString(EightTracksContract.perPage);
+                    eighttracks.prevPage = pageing.getString(EightTracksContract.prevPage);
+                    eighttracks.totalMixes = pageing.getString(EightTracksContract.totalMixes);
+                    eighttracks.totalPages = pageing.getString(EightTracksContract.totalPages);
+
+                    JSONArray mixes = json.getJSONArray(EightTracksContract.mixes);
+                    for(int i = 0; i < mixes.length(); i++){
+                        eighttracks.add(EightTracksModel.createFromJSON(mixes.getJSONObject(i)));
+                    }
+                    callback.dataReceived(eighttracks);
+
+                } catch (JSONException e) {
+                    callback.errorReceived(e);
+                }
+
+            }
+
+            @Override
+            public void errorOccured(HttpOptions options) {
+                callback.errorReceived(options.getError());
+            }
+        });
+
+    }
+
+    @Override
+    public void eightTracksPlay(EightTracksModel track, final WoopDataReceived<PlayingInfoModel> callback) {
+      /*  url: '/api/8tracks/play',///' + mix.id,
+                type: 'POST',
+                data: {mix: JSON.stringify(mix)}
+        */
+        String url = _serviceHostAdress + "/api/8tracks/play";
+        HttpOptions options = new HttpOptions(url, HttpRequestType.POST);
+        HashMap<String, String> data = new HashMap<>();
+        try {
+            data.put("mix", track.toJSON().toString());
+        } catch (JSONException e) {
+            callback.errorReceived(e);
+            return;
+        }
+        options.setPostData(data);
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(HttpOptions options, JSONObject json) {
+                PlayingInfoModel info = PlayingInfoModel.createFromJson(json);
+                setPlayingInfo(info);
+                callback.dataReceived(currentPlayingInfo());
+            }
+
+            @Override
+            public void errorOccured(HttpOptions options) {
+                callback.errorReceived(options.getError());
+            }
+        });
     }
 
     //private functions
