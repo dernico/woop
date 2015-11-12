@@ -489,7 +489,7 @@ public class WoopServer implements IWoopServer {
         tag = tag.replace(" ", "_");
         tag = urlEncode(tag);
         String url = _serviceHostAdress + "/api/8tracks/tags?tag=" + tag;
-        HttpOptions options = new HttpOptions(url);
+        HttpOptions options = new HttpOptions(url,10000);
         makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
             @Override
             public void jsonComplete(HttpOptions options, JSONObject json) {
