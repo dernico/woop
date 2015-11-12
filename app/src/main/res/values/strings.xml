@@ -24,6 +24,8 @@
 
     <string name="streams_tabs_saved">Saved</string>
     <string name="streams_tabs_search">Search</string>
+
+    <string name="streams_search_button_voice">Voice</string>
     <string name="streams_search_button_search">Search</string>
 
 

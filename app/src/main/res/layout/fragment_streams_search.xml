@@ -11,19 +11,29 @@
 
 
         <Button
-            android:id="@+id/fragment_streams_search_button_search"
-            android:text="@string/streams_search_button_search"
+            android:id="@+id/fragment_streams_voice_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/ten_dp_margin"/>
+            android:layout_marginRight="@dimen/ten_dp_margin"
+            android:text="@string/streams_search_button_voice"
+            />
 
         <EditText
             android:id="@+id/fragment_streams_search_query"
-            android:layout_toRightOf="@id/fragment_streams_search_button_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/fragment_streams_voice_button"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
+
+
+        <Button
+            android:id="@+id/fragment_streams_search_button_search"
+            android:text="@string/streams_search_button_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/fragment_streams_search_query"
+            android:layout_margin="@dimen/ten_dp_margin"/>
 
     </RelativeLayout>
 
