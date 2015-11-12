@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="@dimen/cover_image_size"
+        android:layout_width="wrap_content"
+        android:maxWidth="@dimen/cover_image_size"
         android:layout_height="@dimen/cover_image_size"
         android:id="@+id/adapter_mymusic_item_image" />
 
@@ -24,7 +25,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text=""
-        android:layout_toRightOf="@+id/adapter_mymusic_item_image"/>
+        android:layout_toRightOf="@+id/adapter_mymusic_item_image"
+        android:layout_below="@+id/adapter_mymusic_item_artist"
+        />
 
     <TextView
         android:id="@+id/adapter_mymusic_item_album"
@@ -32,6 +35,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text=""
-        android:layout_toRightOf="@+id/adapter_mymusic_item_image"/>
+        android:layout_toRightOf="@+id/adapter_mymusic_item_image"
+        android:layout_below="@+id/adapter_mymusic_item_title"/>
 
-</LinearLayout>
+</RelativeLayout>
