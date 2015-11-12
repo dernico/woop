@@ -34,12 +34,14 @@ public class MainActivity extends BaseActivity implements IMainView {
 
     @Override
     public void onBackPressed(){
+        // For now i dont want the backbutton to work
+
         // bigger 1 because the first one is the start fragment
-        if (getFragmentManager().getBackStackEntryCount() > 1 ){
+        /*if (getFragmentManager().getBackStackEntryCount() > 1 ){
             navigation().goBack();
         } else {
             super.onBackPressed();
-        }
+        }*/
     }
 
     @Override
