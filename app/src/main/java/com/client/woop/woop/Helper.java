@@ -46,7 +46,7 @@ public class Helper {
                     .diskCacheFileCount(100)
                     .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())*/
                     .defaultDisplayImageOptions(imageLoaderOptions())
-                    .writeDebugLogs()
+                    //.writeDebugLogs()
                     .build();
             _imageLoader = ImageLoader.getInstance();
             _imageLoader.init(config);
