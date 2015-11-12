@@ -52,7 +52,7 @@ public class FavoriteStreamAdapter extends ArrayAdapter<StreamModel> {
         tv.setText(stream.getName());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_streams_item_image);
-        ImageLoader.getInstance().displayImage(stream.getImage(), image, Helper.imageLoaderOptions());
+        ImageLoader.getInstance().displayImage(stream.getImage(), image);
 
         return v;
     }

@@ -5,6 +5,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.client.woop.woop.Helper;
 import com.client.woop.woop.R;
 import com.client.woop.woop.activitys.interfaces.IMainView;
 import com.client.woop.woop.controller.MainController;
@@ -17,6 +18,7 @@ public class MainActivity extends BaseActivity implements IMainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Helper.initImageLoader(this);
 
         setNavigationFragment();
         new MainController(this, woopServer(), navigation());

@@ -58,7 +58,7 @@ public class MyMusicAdapter extends ArrayAdapter<ServerMusicModel> {
         tv.setText(stream.get_album());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_mymusic_item_image);
-        ImageLoader.getInstance().displayImage(stream.get_cover(), image, Helper.imageLoaderOptions());
+        ImageLoader.getInstance().displayImage(stream.get_cover(), image);
 
         return v;
     }

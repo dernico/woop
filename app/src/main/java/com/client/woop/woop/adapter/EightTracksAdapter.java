@@ -54,7 +54,7 @@ public class EightTracksAdapter extends ArrayAdapter<EightTracksModel> {
         tv.setText(mix.getName());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_eighttracks_item_image);
-        ImageLoader.getInstance().displayImage(mix.getCover(), image, Helper.imageLoaderOptions());
+        ImageLoader.getInstance().displayImage(mix.getCover(), image);
 
         return v;
     }

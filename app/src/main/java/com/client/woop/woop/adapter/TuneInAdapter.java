@@ -53,7 +53,7 @@ public class TuneInAdapter extends ArrayAdapter<TuneInModel> {
         tv.setText(stream.get_name());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_streams_item_image);
-        ImageLoader.getInstance().displayImage(stream.get_image(), image, Helper.imageLoaderOptions());
+        ImageLoader.getInstance().displayImage(stream.get_image(), image);
 
         return v;
     }

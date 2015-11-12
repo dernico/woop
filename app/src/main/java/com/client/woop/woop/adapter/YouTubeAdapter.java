@@ -54,7 +54,7 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
         tv.setText(stream.get_title());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_youtube_item_image);
-        ImageLoader.getInstance().displayImage(stream.get_thumbnail(), image, Helper.imageLoaderOptions());
+        ImageLoader.getInstance().displayImage(stream.get_thumbnail(), image);
 
         return v;
     }

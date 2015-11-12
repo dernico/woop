@@ -9,17 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.client.woop.woop.Helper;
 import com.client.woop.woop.R;
 import com.client.woop.woop.controller.PlayingInfoController;
 import com.client.woop.woop.data.WoopServer;
 import com.client.woop.woop.fragments.interfaces.IPlayingInfoView;
 import com.client.woop.woop.models.PlayingInfoModel;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 public class PlayingInfoFragment extends BaseFragment implements IPlayingInfoView {
 
-    ImageLoader _imageLoader;
     ImageView _imageView;
     TextView _textView;
     PlayingInfoModel _currentInfo;
@@ -38,12 +37,6 @@ public class PlayingInfoFragment extends BaseFragment implements IPlayingInfoVie
         _imageView = (ImageView) v.findViewById(R.id.fragment_playing_info_cover);
         _textView = (TextView) v.findViewById(R.id.fragment_playing_info_text);
 
-        // Create global configuration and initialize ImageLoader with this config
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getActivity())
-                .build();
-        _imageLoader = ImageLoader.getInstance();
-        _imageLoader.init(config);
-
         new PlayingInfoController(this, woopServer());
         return v;
     }
@@ -57,12 +50,10 @@ public class PlayingInfoFragment extends BaseFragment implements IPlayingInfoVie
         if(info.Cover == null) return;
 
         if(_currentInfo == null){
-            _imageView.setImageBitmap(null);
-            _imageLoader.displayImage(info.Cover, _imageView);
+            ImageLoader.getInstance().displayImage(info.Cover, _imageView);
         }
         else if(info.Cover.compareTo(_currentInfo.Cover) != 0){
-            _imageView.setImageBitmap(null);
-            _imageLoader.displayImage(info.Cover, _imageView);
+            ImageLoader.getInstance().displayImage(info.Cover, _imageView);
         }
 
         _currentInfo = info;

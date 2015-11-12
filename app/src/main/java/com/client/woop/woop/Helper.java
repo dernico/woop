@@ -35,25 +35,23 @@ public class Helper {
     }
 
 
-    public static ImageLoader imageLoader(Context context){
+    public static ImageLoader initImageLoader(Context context){
         if(_imageLoader == null) {
-
-
 
             // Create global configuration and initialize ImageLoader with this config
             File cacheDir = StorageUtils.getCacheDirectory(context);
             ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-                    .diskCache(new UnlimitedDiskCache(cacheDir)) // default
+/*                    .diskCache(new UnlimitedDiskCache(cacheDir)) // default
                     .diskCacheSize(50 * 1024 * 1024)
                     .diskCacheFileCount(100)
-                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+                    .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())*/
                     .defaultDisplayImageOptions(imageLoaderOptions())
                     .writeDebugLogs()
                     .build();
             _imageLoader = ImageLoader.getInstance();
             _imageLoader.init(config);
         }
-        return _imageLoader;
+        return ImageLoader.getInstance();
     }
 
 }
