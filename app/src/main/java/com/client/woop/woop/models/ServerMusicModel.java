@@ -1,5 +1,7 @@
 package com.client.woop.woop.models;
 
+import com.client.woop.woop.contracts.ServerMusicContract;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +14,22 @@ public class ServerMusicModel {
     private String _cover;
     private boolean _isnext;
     private String _webpath;
+
+
+    public static ServerMusicModel create(JSONObject json) throws JSONException {
+        ServerMusicModel model = new ServerMusicModel();
+
+        model.set_id(json.getInt(ServerMusicContract.id ));
+        model.set_album(json.getString(ServerMusicContract.album));
+        model.set_artist(json.getString(ServerMusicContract.artist));
+        model.set_cover(json.getString(ServerMusicContract.cover));
+        model.set_isLocal(json.getBoolean(ServerMusicContract.islocal));
+        model.set_title(json.getString(ServerMusicContract.title));
+        model.set_isnext(json.getBoolean(ServerMusicContract.isnext));
+        model.set_webpath(json.getString(ServerMusicContract.webpath));
+
+        return model;
+    }
 
 
     public int get_id() {
@@ -76,20 +94,5 @@ public class ServerMusicModel {
 
     public void set_webpath(String _webpath) {
         this._webpath = _webpath;
-    }
-
-    public static ServerMusicModel create(JSONObject json) throws JSONException {
-        ServerMusicModel model = new ServerMusicModel();
-
-        model.set_id(json.getInt("id"));
-        model.set_album(json.getString("album"));
-        model.set_artist(json.getString("artist"));
-        model.set_cover(json.getString("cover"));
-        model.set_isLocal(json.getBoolean("islocal"));
-        model.set_title(json.getString("title"));
-        model.set_isnext(json.getBoolean("isnext"));
-        model.set_webpath(json.getString("webpath"));
-
-        return model;
     }
 }

@@ -1,5 +1,7 @@
 package com.client.woop.woop.models;
 
+import com.client.woop.woop.contracts.StreamModelContract;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,11 +15,11 @@ public class StreamModel {
 
     public static StreamModel createFromJson(JSONObject json) throws JSONException {
         StreamModel model = new StreamModel();
-        model.id = json.getInt("id");
-        model.description = json.getString("description");
-        model.stream = json.getString("stream");
-        model.image = json.getString("image");
-        model.name = json.getString("name");
+        model.id = json.getInt(StreamModelContract.id);
+        model.description = json.getString(StreamModelContract.description);
+        model.stream = json.getString(StreamModelContract.stream);
+        model.image = json.getString(StreamModelContract.image);
+        model.name = json.getString(StreamModelContract.name);
 
         return model;
     }
