@@ -53,6 +53,7 @@ public class WoopServer implements IWoopServer {
 
     public interface WoopServerListener{
         void serviceFound();
+        void serviceNotFound(String address);
     }
 
     public interface WoopDataReceived<T>{
@@ -155,10 +156,14 @@ public class WoopServer implements IWoopServer {
                             }
                         });
                     }
+                    else{
+                        listener.serviceNotFound(options.url);
+                    }
                 }
 
                 @Override
                 public void errorCallBack(HttpOptions options) {
+                    listener.serviceNotFound(options.url);
                     _logger.info(TAG, options.getError().toString());
                 }
             }));
@@ -526,10 +531,7 @@ public class WoopServer implements IWoopServer {
 
     @Override
     public void eightTracksPlay(EightTracksModel track, final WoopDataReceived<PlayingInfoModel> callback) {
-      /*  url: '/api/8tracks/play',///' + mix.id,
-                type: 'POST',
-                data: {mix: JSON.stringify(mix)}
-        */
+
         String url = _serviceHostAdress + "/api/8tracks/play";
         HttpOptions options = new HttpOptions(url, HttpRequestType.POST);
         HashMap<String, String> data = new HashMap<>();

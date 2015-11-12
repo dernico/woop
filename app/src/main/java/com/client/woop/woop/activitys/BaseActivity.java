@@ -158,7 +158,9 @@ public class BaseActivity extends AppCompatActivity
     public void showProgessbar(String title, String message){
         _progressDialog.setTitle(title);
         _progressDialog.setMessage(message);
-        _progressDialog.show();
+        if(!_progressDialog.isShowing()){
+            _progressDialog.show();
+        }
     }
 
     public void hideProgressBar() {

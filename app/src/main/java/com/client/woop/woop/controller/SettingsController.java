@@ -16,6 +16,7 @@ public class SettingsController implements WoopServer.WoopServerListener {
     private IWoopServer _woop;
     private INavigation _navigation;
     private IGoogleData _google;
+    private int _notFoundCounter;
 
     public SettingsController(ISettingsView view,
                               IWoopServer server,
@@ -44,6 +45,7 @@ public class SettingsController implements WoopServer.WoopServerListener {
     }
 
     public void searchServer(){
+        _notFoundCounter = 0;
         _view.showProgressBar("Busy finding woop server");
         _woop.findService(this);
     }
@@ -52,5 +54,12 @@ public class SettingsController implements WoopServer.WoopServerListener {
     public void serviceFound() {
         _view.hideProgressBar();
         _navigation.navigateMain();
+    }
+
+    @Override
+    public void serviceNotFound(String address) {
+        _notFoundCounter += 1;
+
+        _view.showProgressBar("Attempt " + _notFoundCounter + " from 255 :)");
     }
 }
