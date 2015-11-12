@@ -8,11 +8,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.client.woop.woop.Helper;
 import com.client.woop.woop.R;
 import com.client.woop.woop.models.TuneInModel;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -20,7 +25,6 @@ public class TuneInAdapter extends ArrayAdapter<TuneInModel> {
 
     private List<TuneInModel> _streams;
     private Context _context;
-    private ImageLoader _imageLoader;
 
     public TuneInAdapter(Context ctx, List<TuneInModel> streams){
         super(ctx, R.layout.adapter_streams_item, streams);
@@ -28,11 +32,6 @@ public class TuneInAdapter extends ArrayAdapter<TuneInModel> {
         _context = ctx;
         _streams = streams;
 
-        // Create global configuration and initialize ImageLoader with this config
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(_context)
-        .build();
-        _imageLoader = ImageLoader.getInstance();
-        _imageLoader.init(config);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class TuneInAdapter extends ArrayAdapter<TuneInModel> {
         tv.setText(stream.get_name());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_streams_item_image);
-        _imageLoader.displayImage(stream.get_image(), image);
+        ImageLoader.getInstance().displayImage(stream.get_image(), image, Helper.imageLoaderOptions());
 
         return v;
     }

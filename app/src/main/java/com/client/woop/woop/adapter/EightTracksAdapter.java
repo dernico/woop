@@ -9,12 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.client.woop.woop.Helper;
 import com.client.woop.woop.R;
 import com.client.woop.woop.extensions.EightTracksList;
 import com.client.woop.woop.models.EightTracksModel;
 import com.client.woop.woop.models.YouTubeModel;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.utils.StorageUtils;
+
+import java.io.File;
 
 public class EightTracksAdapter extends ArrayAdapter<EightTracksModel> {
 
@@ -27,12 +33,6 @@ public class EightTracksAdapter extends ArrayAdapter<EightTracksModel> {
 
         _context = ctx;
         _mixes = mixes;
-
-        // Create global configuration and initialize ImageLoader with this config
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(_context)
-                .build();
-        _imageLoader = ImageLoader.getInstance();
-        _imageLoader.init(config);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class EightTracksAdapter extends ArrayAdapter<EightTracksModel> {
         tv.setText(mix.getName());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_eighttracks_item_image);
-        _imageLoader.displayImage(mix.getCover(), image);
+        ImageLoader.getInstance().displayImage(mix.getCover(), image, Helper.imageLoaderOptions());
 
         return v;
     }

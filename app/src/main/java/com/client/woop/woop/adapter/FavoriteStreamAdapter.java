@@ -8,18 +8,22 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.client.woop.woop.Helper;
 import com.client.woop.woop.R;
 import com.client.woop.woop.models.StreamModel;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import java.io.File;
 import java.util.List;
 
 public class FavoriteStreamAdapter extends ArrayAdapter<StreamModel> {
 
     private List<StreamModel> _streams;
     private Context _context;
-    private ImageLoader _imageLoader;
 
     public FavoriteStreamAdapter(Context ctx, List<StreamModel> streams){
         super(ctx, R.layout.adapter_streams_item, streams);
@@ -27,11 +31,6 @@ public class FavoriteStreamAdapter extends ArrayAdapter<StreamModel> {
         _context = ctx;
         _streams = streams;
 
-        // Create global configuration and initialize ImageLoader with this config
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(_context)
-        .build();
-        _imageLoader = ImageLoader.getInstance();
-        _imageLoader.init(config);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class FavoriteStreamAdapter extends ArrayAdapter<StreamModel> {
         tv.setText(stream.getName());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_streams_item_image);
-        _imageLoader.displayImage(stream.getImage(), image);
+        ImageLoader.getInstance().displayImage(stream.getImage(), image, Helper.imageLoaderOptions());
 
         return v;
     }

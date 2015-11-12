@@ -8,12 +8,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.client.woop.woop.Helper;
 import com.client.woop.woop.R;
 import com.client.woop.woop.models.StreamModel;
 import com.client.woop.woop.models.YouTubeModel;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -21,7 +26,6 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
 
     private List<YouTubeModel> _streams;
     private Context _context;
-    private ImageLoader _imageLoader;
 
     public YouTubeAdapter(Context ctx, List<YouTubeModel> streams){
         super(ctx, R.layout.adapter_youtube_item, streams);
@@ -29,11 +33,6 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
         _context = ctx;
         _streams = streams;
 
-        // Create global configuration and initialize ImageLoader with this config
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(_context)
-                .build();
-        _imageLoader = ImageLoader.getInstance();
-        _imageLoader.init(config);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
         tv.setText(stream.get_title());
 
         ImageView image = (ImageView) v.findViewById(R.id.adapter_youtube_item_image);
-        _imageLoader.displayImage(stream.get_thumbnail(), image);
+        ImageLoader.getInstance().displayImage(stream.get_thumbnail(), image, Helper.imageLoaderOptions());
 
         return v;
     }
