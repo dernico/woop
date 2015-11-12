@@ -7,36 +7,32 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.client.woop.woop.R;
+import com.client.woop.woop.adapter.YouTubeAdapter;
+import com.client.woop.woop.controller.YoutubeController;
+import com.client.woop.woop.extensions.YoutubeList;
+import com.client.woop.woop.fragments.BaseFragment;
+import com.client.woop.woop.fragments.interfaces.IYoutubeView;
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link YouTubeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
  * Use the {@link YouTubeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class YouTubeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class YouTubeFragment extends BaseFragment implements IYoutubeView {
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Button _searchButton;
+    private TextView _searchText;
+    private ListView _searchResultList;
 
-    private OnFragmentInteractionListener mListener;
+    private YoutubeController _controller;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment YouTubeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static YouTubeFragment newInstance() {
         YouTubeFragment fragment = new YouTubeFragment();
         Bundle args = new Bundle();
@@ -51,56 +47,37 @@ public class YouTubeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_you_tube, container, false);
-    }
+        View v = inflater.inflate(R.layout.fragment_you_tube, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+        _searchText = (TextView) v.findViewById(R.id.fragment_youtube_search_query);
+        _searchButton = (Button) v.findViewById(R.id.fragment_youtube_search_button_search);
+        _searchResultList = (ListView) v.findViewById(R.id.fragment_youtube_search_results);
+
+        _searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _controller.search(_searchText.getText().toString());
+            }
+        });
+
+        _searchResultList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
+        _controller = new YoutubeController(this, woopServer());
+        return v;
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        /*try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }*/
+    public void setSearchResult(YoutubeList result) {
+        _searchResultList.setAdapter(new YouTubeAdapter(getContext(), result));
     }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
 }

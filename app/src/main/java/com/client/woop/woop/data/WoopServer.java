@@ -2,15 +2,18 @@ package com.client.woop.woop.data;
 
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
+import com.client.woop.woop.contracts.YoutubeContract;
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.data.interfaces.IDeviceData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
+import com.client.woop.woop.extensions.YoutubeList;
 import com.client.woop.woop.models.KeyValueModel;
 import com.client.woop.woop.models.LocalMusicModel;
 import com.client.woop.woop.models.ServerMusicModel;
 import com.client.woop.woop.models.PlayingInfoModel;
 import com.client.woop.woop.models.StreamModel;
 import com.client.woop.woop.models.TuneInModel;
+import com.client.woop.woop.models.YouTubeModel;
 import com.client.woop.woop.web.HttpOptions;
 import com.client.woop.woop.web.HttpRequest;
 import com.client.woop.woop.web.HttpRequestType;
@@ -74,6 +77,16 @@ public class WoopServer implements IWoopServer {
             _server = new WoopServer(storage, deviceData);
         }
         return _server;
+    }
+
+    private String urlEncode(String encoding){
+        try {
+            encoding = URLEncoder.encode(encoding, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            //Don't know why, but try the search without urlencoder
+            _logger.info(TAG, "Could not Urlencode: " + encoding);
+        }
+        return  encoding;
     }
 
     @Override
@@ -216,11 +229,8 @@ public class WoopServer implements IWoopServer {
         final File file = new File(model.get_uri());
 
         String filename = file.getName();
-        try {
-            filename = URLEncoder.encode(filename, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            //Don't know why, but try the search without urlencoder
-        }
+
+        filename = urlEncode(filename);
 
         String url = _serviceHostAdress + "/api/music/checkandplay?filename=" + filename;
         HttpOptions options = new HttpOptions(url);
@@ -309,7 +319,7 @@ public class WoopServer implements IWoopServer {
                     int count = json.getInt("count");
                     JSONArray liste = json.getJSONArray("list");
                     List<ServerMusicModel> mymusic = new ArrayList<>();
-                    for(int i = 0; i < liste.length(); i++){
+                    for (int i = 0; i < liste.length(); i++) {
                         mymusic.add(ServerMusicModel.create(liste.getJSONObject(i)));
                     }
                     callback.dataReceived(mymusic);
@@ -376,11 +386,7 @@ public class WoopServer implements IWoopServer {
 
     @Override
     public void searchTuneInStream(String query, final WoopDataReceived<List<TuneInModel>> callback) {
-        try {
-            query = URLEncoder.encode(query, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            //Don't know why, but try the search without urlencoder
-        }
+        query = urlEncode(query);
 
         HttpOptions options = new HttpOptions(
                 _serviceHostAdress + "/api/tunein/search?search="+query,
@@ -440,6 +446,38 @@ public class WoopServer implements IWoopServer {
                 callback.errorReceived(options.getError());
             }
         });
+    }
+
+    @Override
+    public void youtubeSearch(String searchterm, final WoopDataReceived<YoutubeList> callback) {
+
+        searchterm = urlEncode(searchterm);
+        String url = _serviceHostAdress + "/api/youtube/search?search=" + searchterm;
+        HttpOptions options = new HttpOptions(url);
+        makeJSONRequest(options, new JSONDownloader.JSONDownloadCompleteListener() {
+            @Override
+            public void jsonComplete(HttpOptions options, JSONObject json) {
+                try {
+                    YoutubeList result = new YoutubeList();
+                    result.Query = json.getString(YoutubeContract.query);
+                    result.NextPageToken = json.getString(YoutubeContract.nextPageToken);
+                    JSONArray tracks = json.getJSONArray(YoutubeContract.tracks);
+                    for(int i = 0; i < tracks.length(); i++){
+                        YouTubeModel model = YouTubeModel.createFromJSON(tracks.getJSONObject(i));
+                        result.add(model);
+                    }
+                    callback.dataReceived(result);
+                } catch (JSONException e) {
+                    callback.errorReceived(e);
+                }
+            }
+
+            @Override
+            public void errorOccured(HttpOptions options) {
+                callback.errorReceived(options.getError());
+            }
+        });
+
     }
 
     //private functions

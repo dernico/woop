@@ -75,7 +75,6 @@ public class NavigationFragment extends BaseFragment {
 
         selectItem(_currentSelectedPosition);
 
-        //setUp();
     }
 
 
@@ -158,8 +157,8 @@ public class NavigationFragment extends BaseFragment {
         // set up the drawer's list view with items and click listener
 
         ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setHomeButtonEnabled(false);
 
         // ActionBarDrawerToggle ties together the the proper interactions
         // between the navigation drawer and the action bar app icon.
@@ -178,7 +177,6 @@ public class NavigationFragment extends BaseFragment {
                 }
 
                 getActivity().invalidateOptionsMenu();
-                //getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
 
             @Override
@@ -198,7 +196,6 @@ public class NavigationFragment extends BaseFragment {
                 }
 
                 getActivity().invalidateOptionsMenu();
-                //getActivity().supportInvalidateOptionsMenu(); // calls onPrepareOptionsMenu()
             }
         };
 

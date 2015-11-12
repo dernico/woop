@@ -26,7 +26,7 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
     private ImageLoader _imageLoader;
 
     public YouTubeAdapter(Context ctx, List<YouTubeModel> streams){
-        super(ctx, R.layout.adapter_streams_item, streams);
+        super(ctx, R.layout.adapter_youtube_item, streams);
 
         _context = ctx;
         _streams = streams;
@@ -48,15 +48,15 @@ public class YouTubeAdapter extends ArrayAdapter<YouTubeModel> {
         View v = convertView;
         if(v == null){
             LayoutInflater layout = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = layout.inflate(R.layout.adapter_streams_item ,null);
+            v = layout.inflate(R.layout.adapter_youtube_item ,null);
         }
 
         YouTubeModel stream = _streams.get(position);
 
-        TextView tv = (TextView) v.findViewById(R.id.adapter_streams_item_name);
+        TextView tv = (TextView) v.findViewById(R.id.adapter_youtube_item_text);
         tv.setText(stream.get_title());
 
-        ImageView image = (ImageView) v.findViewById(R.id.adapter_streams_item_image);
+        ImageView image = (ImageView) v.findViewById(R.id.adapter_youtube_item_image);
         _imageLoader.displayImage(stream.get_thumbnail(), image);
 
         return v;

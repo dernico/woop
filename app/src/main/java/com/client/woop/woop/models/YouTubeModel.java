@@ -1,6 +1,11 @@
 package com.client.woop.woop.models;
 
 
+import com.client.woop.woop.contracts.YoutubeContract;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class YouTubeModel {
 
     private String _id;
@@ -8,6 +13,18 @@ public class YouTubeModel {
     private String _description;
     private String _thumbnail;
     private boolean _showPlayNext;
+
+    public static final YouTubeModel createFromJSON(JSONObject json) throws JSONException {
+        YouTubeModel model = new YouTubeModel();
+
+        model._id = json.getString(YoutubeContract.id);
+        model._title = json.getString(YoutubeContract.title);
+        model._description = json.getString(YoutubeContract.description);
+        model._thumbnail = json.getString(YoutubeContract.thumbnail);
+        model._showPlayNext = json.getBoolean(YoutubeContract.showPlayNext);
+
+        return model;
+    }
 
     public String get_id() {
         return _id;
