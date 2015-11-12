@@ -25,7 +25,7 @@ public class KeyValueStorage implements IKeyValueStorage {
     }
 
     @Override
-    public void removeKey(String key) {
-
+    public void removeKey(String key, final KeyValueStoreDB.IKeyValueStoreCallback callback) {
+        _db.removeKey(key, callback);
     }
 }

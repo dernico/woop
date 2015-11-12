@@ -14,6 +14,7 @@ public interface IWoopServer {
     void connect();
     boolean isServerOnline();
     void findService(WoopServer.WoopServerListener callback);
+    String getServiceAddress();
 
     void subscribePlayingInfoChanged(WoopServer.WoopInfoChanged callback);
 

@@ -3,6 +3,7 @@ package com.client.woop.woop.data.interfaces;
 import android.content.Intent;
 
 import com.client.woop.woop.data.GoogleData;
+import com.client.woop.woop.data.KeyValueStoreDB;
 import com.client.woop.woop.models.PersonModel;
 
 
@@ -13,4 +14,5 @@ public interface IGoogleData {
     void onActivityResult(int requestCode, int resultCode, Intent data);
 
     PersonModel getPerson();
+    void resetPerson(KeyValueStoreDB.IKeyValueStoreCallback callback);
 }

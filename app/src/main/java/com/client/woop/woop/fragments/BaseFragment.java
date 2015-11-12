@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.client.woop.woop.activitys.BaseActivity;
 import com.client.woop.woop.data.KeyValueStorage;
+import com.client.woop.woop.data.interfaces.IGoogleData;
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.navigation.INavigation;
@@ -16,6 +17,7 @@ public class BaseFragment extends Fragment {
     private IKeyValueStorage _storage;
     private IWoopServer _woop;
     private BaseActivity _parentActivity;
+    private IGoogleData _google;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,7 @@ public class BaseFragment extends Fragment {
 
         _storage = new KeyValueStorage(getContext());
         _woop = _parentActivity.woopServer();
+        _google = _parentActivity.googleData();
     }
 
     public IWoopServer woopServer(){
@@ -34,6 +37,8 @@ public class BaseFragment extends Fragment {
     public INavigation navigation(){return _navigation;}
 
     public IKeyValueStorage storage(){return _storage;}
+
+    public IGoogleData googleData() { return _google; }
 
     public void showProgressbar(String title, String message){
         _parentActivity.showProgessbar(title, message);

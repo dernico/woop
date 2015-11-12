@@ -4,25 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.client.woop.woop.ILogger;
 import com.client.woop.woop.Logger;
-import com.client.woop.woop.R;
 import com.client.woop.woop.data.interfaces.IGoogleData;
 import com.client.woop.woop.data.interfaces.IKeyValueStorage;
 import com.client.woop.woop.models.KeyValueModel;
 import com.client.woop.woop.models.PersonModel;
 import com.client.woop.woop.web.ImageDownloader;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInConfig;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.plus.Plus;
 
 import org.json.JSONException;
@@ -43,7 +35,7 @@ public class GoogleData implements IGoogleData,
         void isavailable(boolean available);
     }
 
-    protected static final String PERSON_STORAGE_KEY = "GOOGLE_PERSON_JSON";
+    public static final String PERSON_STORAGE_KEY = "GOOGLE_PERSON_JSON";
 
     /* Request code used to invoke sign in user interactions. */
     protected static final int RC_SIGN_IN = 0;
@@ -106,7 +98,7 @@ public class GoogleData implements IGoogleData,
     @Override
     public void onConnected(Bundle bundle) {
 
-        this.loadPerson();
+        this.loadPerson(null);
         _connectedListener.onConnected(bundle);
         _googleApi.disconnect();
 
@@ -153,12 +145,6 @@ public class GoogleData implements IGoogleData,
             if(!_googleApi.isConnected() && !_googleApi.isConnecting()){
                 _googleApi.connect();
             }
-            /*if (resultCode == RESULT_OK && !mPlusClient.isConnected()
-                    && !mPlusClient.isConnecting()) {
-
-                _google.connect();
-
-            }*/
         }
     }
 
@@ -167,8 +153,19 @@ public class GoogleData implements IGoogleData,
         return _currentPerson;
     }
 
+    @Override
+    public void resetPerson(final KeyValueStoreDB.IKeyValueStoreCallback callback) {
+        _storage.removeKey(PERSON_STORAGE_KEY, new KeyValueStoreDB.IKeyValueStoreCallback() {
+            @Override
+            public void done(KeyValueModel result) {
+                _currentPerson = null;
+                callback.done(null);
+            }
+        });
+    }
 
-    private void loadPerson(){
+
+    private void loadPerson(final KeyValueStoreDB.IKeyValueStoreCallback callback){
 
         if(_currentPerson == null){
             _currentPerson = loadPersonInfos();
@@ -184,7 +181,9 @@ public class GoogleData implements IGoogleData,
                             _storage.putString(PERSON_STORAGE_KEY, jsonString, new KeyValueStoreDB.IKeyValueStoreCallback() {
                                 @Override
                                 public void done(KeyValueModel result) {
-                                    //TODO: maybe do something here?
+                                    if(callback != null){
+                                        callback.done(result);
+                                    }
                                 }
                             });
                         } catch (JSONException e) {
@@ -202,10 +201,15 @@ public class GoogleData implements IGoogleData,
         PersonModel model = new PersonModel();
 
         com.google.android.gms.plus.model.people.Person gP = Plus.PeopleApi.getCurrentPerson(_googleApi);
+
+        String accountName = Plus.AccountApi.getAccountName(_googleApi);
+
         model.setId(gP.getId());
         model.setName(gP.getName().getGivenName());
         model.setSurname(gP.getName().getFamilyName());
         model.setDisplayName(gP.getDisplayName());
+        model.setAccountName(accountName);
+
 
         model.setImageUrl(gP.getImage().getUrl());
         return model;

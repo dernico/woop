@@ -9,5 +9,5 @@ public interface IKeyValueStorage {
 
     void putString(String key, String value, KeyValueStoreDB.IKeyValueStoreCallback callback);
 
-    void removeKey(String key);
+    void removeKey(String key, final KeyValueStoreDB.IKeyValueStoreCallback callback);
 }

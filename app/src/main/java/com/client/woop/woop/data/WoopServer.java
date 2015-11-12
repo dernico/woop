@@ -154,6 +154,11 @@ public class WoopServer implements IWoopServer {
     }
 
     @Override
+    public String getServiceAddress() {
+        return _serviceHostAdress;
+    }
+
+    @Override
     public void subscribePlayingInfoChanged(WoopInfoChanged callback) {
         if(_infoChangedCallbacks.containsKey(callback.getClass().getName())){
             _infoChangedCallbacks.remove(callback.getClass().getName());

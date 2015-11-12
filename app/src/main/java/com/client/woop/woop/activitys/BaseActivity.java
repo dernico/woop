@@ -18,6 +18,7 @@ import com.client.woop.woop.data.DeviceData;
 import com.client.woop.woop.data.GoogleData;
 import com.client.woop.woop.data.KeyValueStorage;
 import com.client.woop.woop.data.WoopServer;
+import com.client.woop.woop.data.interfaces.IGoogleData;
 import com.client.woop.woop.data.interfaces.IWoopServer;
 import com.client.woop.woop.models.PersonModel;
 import com.client.woop.woop.navigation.INavigation;
@@ -61,6 +62,8 @@ public class BaseActivity extends AppCompatActivity
     public INavigation navigation(){
         return _navigator;
     }
+
+    public IGoogleData googleData() {return _google; }
 
     public IWoopServer woopServer(){
         WoopServer woop = WoopServer.singelton(new KeyValueStorage(this), new DeviceData());

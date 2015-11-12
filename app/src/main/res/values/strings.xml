@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Woop</string>
-    <string name="title_activity_login">Login</string>
     <string name="menu_action_settings">Settings</string>
+    <string name="title_activity_login">Login</string>
+
+    <string name="Loading">Loading</string>
 
     <string name="login_login_text">Please login with your google Account</string>
     <string name="title_activity_main">Woop</string>
@@ -25,7 +27,9 @@
     <string name="streams_search_button_search">Search</string>
 
     <string name="settings_search_server_button">Try find server </string>
-    <string name="settings_reset_server_button">Reset </string>
+    <string name="settings_reset_user_button">Reload infos</string>
+    <string name="settings_current_service_info_text">You use the following service</string>
+    <string name="settings_current_user_info_text">You are logged in with the following user</string>
 
 
     <string name="error_fragment_navigation_not_found">The Fragment Navigation Drawer was not found.

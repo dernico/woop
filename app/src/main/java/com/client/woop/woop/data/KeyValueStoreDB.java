@@ -102,11 +102,21 @@ public class KeyValueStoreDB {
         }).execute();
     }
 
-    public void deleteKey(String key){
+    private void deleteKey(String key){
         SQLiteDatabase db = _helper.getWritableDatabase();
 
         String selection = KeyValueStoreContract.KeyValue.Key + " = ?";
         String[] selectionArgs = { key };
         db.delete(KeyValueStoreContract.KeyValue.TableName, selection, selectionArgs);
+    }
+
+    public void removeKey(final String key, final IKeyValueStoreCallback callback){
+        new DBThread(new DBThread.IDoInBackground() {
+            @Override
+            public void doInBackground() {
+                deleteKey(key);
+                callback.done(null);
+            }
+        }).execute();
     }
 }

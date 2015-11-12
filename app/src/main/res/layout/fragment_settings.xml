@@ -1,14 +1,65 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.client.woop.woop.fragments.settings.SettingsFragment">
 
 
     <Button
+        android:id="@+id/fragment_settings_search_woop_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ten_dp_margin"
+        android:text="@string/settings_search_server_button" />
+
+    <TextView
+        android:id="@+id/fragment_settings_service_info_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings_search_server_button"
-        android:id="@+id/fragment_settings_search_woop_button" />
+        android:layout_below="@id/fragment_settings_search_woop_button"
+        android:layout_margin="@dimen/ten_dp_margin"
+        android:text="@string/settings_current_service_info_text"
+        />
+
+    <EditText
+        android:id="@+id/fragment_settings_serviceAddress_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_settings_service_info_text"
+        />
+
+    <TextView
+        android:id="@+id/fragment_settings_user_info_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ten_dp_margin"
+        android:layout_below="@id/fragment_settings_serviceAddress_text"
+        android:text="@string/settings_current_user_info_text"
+        />
 
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/fragment_settings_user_accountName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/ten_dp_margin"
+        android:layout_below="@id/fragment_settings_user_info_text"
+        />
+
+
+    <TextView
+        android:id="@+id/fragment_settings_user_displayName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_settings_user_accountName"
+        />
+
+    <Button
+        android:id="@+id/fragment_settings_reset_user_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/ten_dp_margin"
+        android:layout_below="@id/fragment_settings_user_displayName"
+        android:text="@string/settings_reset_user_button"/>
+
+
+</RelativeLayout>
