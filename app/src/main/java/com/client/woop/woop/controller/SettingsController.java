@@ -59,7 +59,6 @@ public class SettingsController implements WoopServer.WoopServerListener {
     @Override
     public void serviceNotFound(String address) {
         _notFoundCounter += 1;
-
-        _view.showProgressBar("Attempt " + _notFoundCounter + " from 255 :)");
+        _view.showProgressBar("Attempt " + _notFoundCounter + " of 255 :)");
     }
 }
